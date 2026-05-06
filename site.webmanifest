@@ -1,0 +1,13 @@
+{
+  "name": "Appice Developers",
+  "short_name": "Appice Dev",
+  "description": "SDKs, APIs, and guides for building with the Appice real-time decisioning platform.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0050FF",
+  "icons": [
+    { "src": "https://appice.ai/img/appice-help-center/assets/images/appice-icon.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "https://appice.ai/img/appice-help-center/assets/images/appice-icon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

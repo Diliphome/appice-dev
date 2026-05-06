@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rate Limits — Appice REST API</title>
+  <meta name="description" content="Per-endpoint rate limits, retry-with-backoff guidance, and elevated tier options for the Appice REST API.">
+  <link rel="canonical" href="https://dev.appice.ai/api/rate-limits.html">
+  <link rel="stylesheet" href="../assets/css/main-nav.css?v=1">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=1">
+  <meta name="theme-color" content="#0050FF">
+  <link rel="icon" type="image/png" href="https://appice.ai/img/appice-help-center/assets/images/appice-icon.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo"><img src="https://appice.ai/img/220426_appice_logo.png" alt="Appice" style="height:36px;width:auto"></a>
+    <div class="nav__links" style="font-size:13px;color:#5B6B8A">Developer Portal</div>
+    <div class="nav__right">
+      <a href="/sandbox-access.html" class="nav__login-btn">Get sandbox</a>
+      <a href="/api/reference.html" class="btn btn--blue">API reference</a>
+    </div>
+  </div>
+</nav>
+
+<div class="article-shell">
+  <div class="article-layout">
+    <aside class="sidebar">
+      <div class="sb-section">
+        <span class="sb-label">API</span>
+        <a href="/api/reference.html" class="sb-link">REST API Reference</a>
+        <a href="/api/authentication.html" class="sb-link">Authentication</a>
+        <a href="/api/rate-limits.html" class="sb-link is-active">Rate Limits</a>
+      </div>
+      <div class="sb-section">
+        <span class="sb-label">Quickstarts</span>
+        <a href="/quickstart/ios.html" class="sb-link">iOS</a>
+        <a href="/quickstart/android.html" class="sb-link">Android</a>
+        <a href="/quickstart/web.html" class="sb-link">Web</a>
+        <a href="/quickstart/react-native.html" class="sb-link">React Native</a>
+      </div>
+    </aside>
+
+    <article class="doc">
+      <header class="doc-header">
+        <div class="breadcrumbs">
+          <a href="/">Developers</a><span>›</span>
+          <a href="/api/reference.html">API</a><span>›</span>
+          Rate Limits
+        </div>
+        <h1>Rate Limits</h1>
+        <p>Limits are per-workspace, evaluated as a sliding 60-second window. They apply across all server keys in the workspace. Hard ceilings can be raised on enterprise tiers.</p>
+      </header>
+
+      <div class="doc-body">
+
+        <section class="doc-section">
+          <h2 id="defaults">Default limits</h2>
+          <table style="width:100%;border-collapse:collapse;font-size:14px">
+            <thead style="background:#F9FBFF">
+              <tr>
+                <th style="text-align:left;padding:10px;border-bottom:1px solid #E2EAF6">Endpoint group</th>
+                <th style="text-align:right;padding:10px;border-bottom:1px solid #E2EAF6">Default (req/min/workspace)</th>
+                <th style="text-align:right;padding:10px;border-bottom:1px solid #E2EAF6">Hard ceiling</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td style="padding:10px;border-bottom:1px solid #EDF2F8">Ingest (<code>POST /events</code>, <code>POST /users</code>)</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">600</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">5,000</td></tr>
+              <tr><td style="padding:10px;border-bottom:1px solid #EDF2F8">Inform trigger (<code>POST /inform/trigger</code>)</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">300</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">3,000</td></tr>
+              <tr><td style="padding:10px;border-bottom:1px solid #EDF2F8">Allyvate decisions (<code>POST /allyvate/decide</code>)</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">600</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">5,000</td></tr>
+              <tr><td style="padding:10px;border-bottom:1px solid #EDF2F8">Reads (<code>GET</code> endpoints)</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">60</td><td style="text-align:right;padding:10px;border-bottom:1px solid #EDF2F8">300</td></tr>
+              <tr><td style="padding:10px">Webhooks management</td><td style="text-align:right;padding:10px">30</td><td style="text-align:right;padding:10px">120</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="headers">Response headers</h2>
+          <p>Every successful response includes:</p>
+          <pre class="code">X-Appice-RateLimit-Limit:     600
+X-Appice-RateLimit-Remaining: 594
+X-Appice-RateLimit-Reset:     1746529231</pre>
+          <p>When you hit the limit you'll receive <code>429 Too Many Requests</code> with:</p>
+          <pre class="code">HTTP/1.1 429 Too Many Requests
+Retry-After: 12
+X-Appice-RateLimit-Remaining: 0
+
+{ "error": "rate_limited", "code": "RATE_LIMITED", "requestId": "req_8f3a..." }</pre>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="backoff">Recommended retry pattern</h2>
+          <p>Exponential backoff with jitter, honoring <code>Retry-After</code>:</p>
+          <pre class="code">async function appiceRequest(url, body, attempt = 0) {
+  const res = await fetch(url, { method: 'POST', body });
+  if (res.status !== 429) return res;
+  const retryAfter = parseInt(res.headers.get('Retry-After') || '1', 10) * 1000;
+  const jitter = Math.random() * 500;
+  const wait = Math.min(retryAfter + jitter, 30_000);  // cap at 30s
+  if (attempt &gt;= 5) throw new Error('Exhausted retries');
+  await new Promise(r =&gt; setTimeout(r, wait));
+  return appiceRequest(url, body, attempt + 1);
+}</pre>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="batching">Reduce 429s by batching</h2>
+          <p><code>POST /events</code> accepts up to <strong>1,000 events per request</strong>. Batching is the cheapest way to multiply your effective throughput by 1000×. Build a queue in your backend and flush every 5–30 seconds, or whenever it hits 1000.</p>
+          <pre class="code">// Pseudocode
+const buffer = [];
+function track(event) { buffer.push(event); if (buffer.length &gt;= 1000) flush(); }
+setInterval(flush, 30_000);
+async function flush() {
+  if (buffer.length === 0) return;
+  const batch = buffer.splice(0, 1000);
+  await appiceRequest('/v1/events', { events: batch });
+}</pre>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="elevated">Elevated tiers</h2>
+          <p>Need more? Talk to your account team — Enterprise tiers can be raised to 5,000 req/min/workspace and beyond on dedicated infrastructure. Contact <a href="mailto:dev@appice.ai">dev@appice.ai</a> with: expected peak QPS, regional split, and whether the workload is steady or bursty.</p>
+        </section>
+
+      </div>
+    </article>
+  </div>
+</div>
+
+<footer style="background:#050D1F;color:rgba(255,255,255,.5);padding:24px;font-size:13px;text-align:center;margin-top:48px">
+  © 2026 Appice. <a href="/" style="color:rgba(255,255,255,.7)">Developer Portal</a>
+</footer>
+
+</body>
+</html>

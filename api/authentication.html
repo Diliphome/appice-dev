@@ -2,155 +2,160 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="icon" type="image/png" href="../img/appice-logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>API Authentication — Appice Developers</title>
-  <meta name="description" content="How API tokens are issued, scoped and presented on Appice REST API requests.">
+  <title>Authentication — Appice REST API</title>
+  <meta name="description" content="API keys, workspace IDs, regional endpoints, and key rotation for the Appice REST API.">
   <link rel="canonical" href="https://dev.appice.ai/api/authentication.html">
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Appice Developers">
-  <meta property="og:url" content="https://dev.appice.ai/api/authentication.html">
-  <meta property="og:title" content="API Authentication — Appice Developers">
-  <meta property="og:description" content="How API tokens are issued, scoped and presented on Appice REST API requests.">
-  <meta property="og:image" content="https://dev.appice.ai/img/og-card.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="API Authentication — Appice Developers">
-  <meta name="twitter:description" content="How API tokens are issued, scoped and presented on Appice REST API requests.">
-  <meta name="twitter:image" content="https://dev.appice.ai/img/og-card.jpg">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Appice","url":"https://appice.ai","logo":"https://appice.ai/img/220426_appice_logo.png","sameAs":["https://www.linkedin.com/company/appiceio","https://x.com/appiceio","https://www.youtube.com/@appiceio"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Appice Developers","url":"https://dev.appice.ai/"}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Developers", "item": "https://dev.appice.ai/"}, {"@type": "ListItem", "position": 2, "name": "API", "item": "https://dev.appice.ai/api"}, {"@type": "ListItem", "position": 3, "name": "Authentication", "item": "https://dev.appice.ai/api/authentication.html"}]}</script>
-  <link rel="stylesheet" href="../css/docs.css?v=1">
-  <link rel="stylesheet" href="../css/prism.css?v=1">
+  <link rel="stylesheet" href="../assets/css/main-nav.css?v=1">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=1">
+  <meta name="theme-color" content="#0050FF">
+  <link rel="icon" type="image/png" href="https://appice.ai/img/appice-help-center/assets/images/appice-icon.png">
 </head>
-<body><nav class="nav">
+<body>
+
+<nav class="nav">
   <div class="nav__inner">
-    <a href="../index.html" class="nav__logo notranslate" translate="no">
-      <img src="../img/appice-logo.png" alt="Appice" style="height:36px;width:auto" loading="eager" decoding="sync" fetchpriority="high">
-      <span class="nav__logo-tag">developers</span>
-    </a>
-    <div class="nav__links">
-      <a href="../sdk/index.html">SDKs</a>
-      <a href="../api/index.html">API</a>
-      <a href="../guides/index.html">Guides</a>
-      <a href="../changelog.html">Changelog</a>
-    </div>
+    <a href="/" class="nav__logo"><img src="https://appice.ai/img/220426_appice_logo.png" alt="Appice" style="height:36px;width:auto"></a>
+    <div class="nav__links" style="font-size:13px;color:#5B6B8A">Developer Portal</div>
     <div class="nav__right">
-      <a href="https://appice.ai" class="nav__back">← appice.ai</a>
-      <button class="nav__search-btn" aria-label="Search documentation">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      </button>
+      <a href="/sandbox-access.html" class="nav__login-btn">Get sandbox</a>
+      <a href="/api/reference.html" class="btn btn--blue">API reference</a>
     </div>
-    <div class="hamburger"><span></span><span></span><span></span></div>
   </div>
 </nav>
-<div class="mobile-menu">
-  <a href="../sdk/index.html">SDKs</a>
-  <a href="../sdk/ios/index.html">— iOS</a>
-  <a href="../sdk/android/index.html">— Android</a>
-  <a href="../sdk/web/index.html">— Web</a>
-  <a href="../sdk/react-native/index.html">— React Native</a>
-  <a href="../api/index.html">API Reference</a>
-  <a href="../guides/index.html">Guides</a>
-  <a href="../changelog.html">Changelog</a>
-  <a href="https://appice.ai">← appice.ai</a>
-</div>
-<div class="search-overlay" id="searchOverlay">
-  <div class="search-box">
-    <div class="search-input-row">
-      <span class="search-icon-inner"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-      <input type="text" class="search-input" placeholder="Search the docs…" autocomplete="off">
-      <span class="search-kbd">⌘K</span>
-      <button class="search-close-btn" aria-label="Close search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-    </div>
-    <div class="search-results"></div>
+
+<div class="article-shell">
+  <div class="article-layout">
+    <aside class="sidebar">
+      <div class="sb-section">
+        <span class="sb-label">API</span>
+        <a href="/api/reference.html" class="sb-link">REST API Reference</a>
+        <a href="/api/authentication.html" class="sb-link is-active">Authentication</a>
+        <a href="/api/rate-limits.html" class="sb-link">Rate Limits</a>
+      </div>
+      <div class="sb-section">
+        <span class="sb-label">Quickstarts</span>
+        <a href="/quickstart/ios.html" class="sb-link">iOS</a>
+        <a href="/quickstart/android.html" class="sb-link">Android</a>
+        <a href="/quickstart/web.html" class="sb-link">Web</a>
+        <a href="/quickstart/react-native.html" class="sb-link">React Native</a>
+      </div>
+    </aside>
+
+    <article class="doc">
+      <header class="doc-header">
+        <div class="breadcrumbs">
+          <a href="/">Developers</a><span>›</span>
+          <a href="/api/reference.html">API</a><span>›</span>
+          Authentication
+        </div>
+        <h1>Authentication</h1>
+        <p>Every Appice API request authenticates with two headers: a Bearer API key and your workspace ID. The combination scopes the request to one workspace in one region.</p>
+      </header>
+
+      <div class="doc-body">
+
+        <section class="doc-section">
+          <h2 id="headers">Required headers</h2>
+          <pre class="code">Authorization: Bearer &lt;YOUR_API_KEY&gt;
+X-Appice-Workspace: &lt;YOUR_WORKSPACE_ID&gt;
+Content-Type: application/json</pre>
+          <div class="callout warn">
+            <div><strong>Server-side only —</strong> Server keys must never ship to a browser, mobile app, or any environment outside your trusted backend. For client telemetry, use the per-platform SDK with its scoped client key.</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="get-keys">Where to get keys</h2>
+          <ol>
+            <li>Sign in to <a href="https://panel.appice.io/" target="_blank">panel.appice.io</a>.</li>
+            <li>Open <strong>Settings → API Keys</strong>.</li>
+            <li>Click <strong>Generate server key</strong>. Copy the key immediately — it's only shown once.</li>
+            <li>Your workspace ID is shown in <strong>Settings → Workspace</strong>.</li>
+          </ol>
+          <p>Don't have a workspace yet? <a href="/sandbox-access.html">Request sandbox access</a> — turnaround is typically same-day.</p>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="regions">Regional endpoints</h2>
+          <p>Each workspace is provisioned in exactly one region. Data residency is enforced server-side — calling the wrong region's endpoint with valid credentials returns <code>401 Unauthorized</code>.</p>
+          <pre class="code">Global: https://api.appice.io/v1
+India:  https://api.in.appice.io/v1
+GCC:    https://api.gcc.appice.io/v1
+EU:     https://api.eu.appice.io/v1</pre>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="examples">Examples</h2>
+          <h3>cURL</h3>
+          <pre class="code">curl -X POST https://api.in.appice.io/v1/events \
+  -H "Authorization: Bearer $APPICE_API_KEY" \
+  -H "X-Appice-Workspace: $APPICE_WORKSPACE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "events": [{
+      "userId": "user_4711",
+      "event": "Loan Disbursed",
+      "timestamp": "2026-05-06T10:33:11Z",
+      "properties": { "amount": 250000, "currency": "INR" }
+    }]
+  }'</pre>
+          <h3>Node Express (server-side)</h3>
+          <pre class="code">import fetch from 'node-fetch';
+
+const res = await fetch('https://api.in.appice.io/v1/events', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${process.env.APPICE_API_KEY}`,
+    'X-Appice-Workspace': process.env.APPICE_WORKSPACE,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    events: [{
+      userId: 'user_4711',
+      event: 'Loan Disbursed',
+      timestamp: new Date().toISOString(),
+      properties: { amount: 250000, currency: 'INR' }
+    }]
+  })
+});</pre>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="rotation">Key rotation</h2>
+          <p>Server keys can be rotated without downtime. The recommended pattern:</p>
+          <ol>
+            <li>Generate a new key in <strong>panel.appice.io</strong> — both keys are now valid.</li>
+            <li>Roll the new key out to your backend (env var update + restart).</li>
+            <li>Verify traffic on the new key in <strong>Settings → API Keys → Activity</strong>.</li>
+            <li>Revoke the old key once activity drops to zero.</li>
+          </ol>
+          <p>Keys expire after <strong>365 days</strong> of inactivity. Active keys never expire automatically.</p>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="scopes">Scopes (planned, Q3 2026)</h2>
+          <p>Today, server keys have full workspace access. Scoped keys (limited to <code>events:write</code>, <code>inform:trigger</code>, <code>webhooks:read</code>, etc.) are on the roadmap — <a href="/changelog.html">watch the changelog</a>.</p>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="troubleshooting">Troubleshooting 401s</h2>
+          <ul>
+            <li>Region mismatch: check the host you're calling matches the workspace's provisioned region.</li>
+            <li>Header typo: <code>X-Appice-Workspace</code> not <code>X-Appice-WorkspaceId</code>.</li>
+            <li>Key revoked: check <strong>Settings → API Keys</strong> for status.</li>
+            <li>Clock skew: requests with timestamps more than 5 minutes off server time are rejected. Sync your server clock via NTP.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
   </div>
 </div>
-<main class="docs-page">
-  <aside class="docs-sidebar">
-    <div class="docs-sidebar__group">
-      <div class="docs-sidebar__head">API</div>
-      <a href="index.html">Overview</a>
-      <a href="authentication.html" class="is-active">Authentication</a>
-      <a href="events.html">Events</a>
-      <a href="webhooks.html">Webhooks</a>
-      <a href="errors.html">Errors</a>
-    </div>
-  </aside>
-  <article class="docs-body">
-    <span class="docs-eyebrow">REST API</span>
-    <h1>Authentication</h1>
-    <p class="docs-lede">How API tokens are issued, scoped and presented on requests.</p>
 
-    <h2>Token format</h2>
-    <div class="todo">
-  <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Document the API token format. Is it a JWT? An opaque string? How is it presented — <code>Authorization: Bearer ...</code>, a custom header, or a query parameter? Include a worked example with a placeholder value.</div>
-</div>
-
-    <h2>Issuing tokens</h2>
-    <div class="todo">
-  <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Where do customers issue API tokens — the Appice panel, an admin API call, both? Document the steps and any required role/permission to do so.</div>
-</div>
-
-    <h2>Scopes</h2>
-    <div class="todo">
-  <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Document the scopes / permissions a token can carry. Include the minimum-privilege scope for common operations (write events, read users, manage webhooks).</div>
-</div>
-
-    <h2>Rotation &amp; expiry</h2>
-    <div class="todo">
-  <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Document token rotation: are tokens long-lived or short-lived? Is there a refresh flow? What's the recommended rotation cadence? What happens when a token expires (HTTP 401 — link to <a href='errors.html'>Errors</a>)?</div>
-</div>
-
-    <h2>Storing tokens</h2>
-    <p>Never embed an API token in client-side code (mobile binaries, web bundles, public repos). Use the SDKs for client-side capture; reserve the REST API for server-to-server calls.</p>
-  </article>
-</main>
-<footer class="footer">
-  <div class="footer__grid">
-    <div class="footer__col footer__brand">
-      <a href="../index.html"><img src="../img/appice-logo.png" alt="Appice" class="footer__logo"></a>
-      <p class="footer__tagline">Decisioning and execution for regulated enterprises.</p>
-      <p class="footer__sub">Developer portal — this is dev.appice.ai.</p>
-    </div>
-    <div class="footer__col">
-      <h4>SDKs</h4>
-      <a href="../sdk/ios/index.html">iOS</a>
-      <a href="../sdk/android/index.html">Android</a>
-      <a href="../sdk/web/index.html">Web</a>
-      <a href="../sdk/react-native/index.html">React Native</a>
-    </div>
-    <div class="footer__col">
-      <h4>API</h4>
-      <a href="../api/index.html">Overview</a>
-      <a href="../api/authentication.html">Authentication</a>
-      <a href="../api/events.html">Events</a>
-      <a href="../api/webhooks.html">Webhooks</a>
-      <a href="../api/errors.html">Errors</a>
-    </div>
-    <div class="footer__col">
-      <h4>Resources</h4>
-      <a href="../guides/index.html">Guides</a>
-      <a href="../guides/getting-started.html">Getting started</a>
-      <a href="../guides/concepts.html">Concepts</a>
-      <a href="../changelog.html">Changelog</a>
-      <a href="https://appice.ai">Main site</a>
-    </div>
-  </div>
-  <div class="footer__legal">
-    <span>&copy; 2026 Appice</span>
-    <a href="https://appice.ai/privacy-policy.html">Privacy</a>
-    <a href="https://appice.ai/terms-of-use.html">Terms</a>
-    <a href="https://appice.ai/security.html">Security</a>
-  </div>
+<footer style="background:#050D1F;color:rgba(255,255,255,.5);padding:24px;font-size:13px;text-align:center;margin-top:48px">
+  © 2026 Appice. <a href="/" style="color:rgba(255,255,255,.7)">Developer Portal</a>
 </footer>
-<script src="../js/docs.js?v=1"></script>
-<script src="../js/search.js?v=1"></script>
-<script src="../js/prism.js?v=1"></script>
+
 </body>
 </html>

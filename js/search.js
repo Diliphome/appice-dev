@@ -40,6 +40,11 @@
     { title: 'API — Events',                   url: ROOT + 'api/events.html',                       tags: 'api events server-side track post idempotency' },
     { title: 'API — Webhooks',                 url: ROOT + 'api/webhooks.html',                     tags: 'api webhooks signature hmac retry' },
     { title: 'API — Errors',                   url: ROOT + 'api/errors.html',                       tags: 'api errors status codes 400 401 429 500' },
+    { title: 'API — Reference (OpenAPI / Redoc)', url: ROOT + 'api/reference.html',                 tags: 'api reference openapi swagger redoc spec endpoints schema' },
+    { title: 'API — Rate limits',              url: ROOT + 'api/rate-limits.html',                  tags: 'api rate limits 429 quota throttling per workspace' },
+    { title: 'Deprecations',                   url: ROOT + 'deprecations.html',                     tags: 'deprecations sunset removed migration sdk version' },
+    { title: 'First decision loop (guide)',    url: ROOT + 'guides/first-decision-loop.html',       tags: 'guide tutorial first decision loop end-to-end signal action' },
+    { title: 'Sandbox access',                 url: ROOT + 'sandbox-access.html',                   tags: 'sandbox access trial test workspace api keys' },
     { title: 'Changelog (master)',             url: ROOT + 'changelog.html',                        tags: 'changelog release notes versions' }
   ];
 

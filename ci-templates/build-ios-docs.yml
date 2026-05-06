@@ -1,0 +1,71 @@
+# ci-templates/build-ios-docs.yml
+# Place this in: appice-ios SDK repo at .github/workflows/build-ios-docs.yml
+#
+# What it does:
+#   1. On every release tag (v*), builds DocC documentation from the iOS SDK source
+#   2. Pushes the rendered HTML into the appice-dev portal repo at sdk/ios/reference/
+#   3. Netlify auto-deploys the portal repo within ~60s
+#
+# Required GitHub repo secrets:
+#   APPICE_DEV_PUSH_TOKEN  — a fine-grained PAT with write access to the appice-dev repo only
+
+name: Build iOS DocC docs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout SDK
+        uses: actions/checkout@v4
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '15.4'
+
+      - name: Build DocC archive
+        run: |
+          xcodebuild docbuild \
+            -scheme Appice \
+            -derivedDataPath ./.derivedData \
+            -destination 'generic/platform=iOS Simulator'
+
+      - name: Convert .doccarchive to static HTML
+        run: |
+          ARCHIVE=$(find .derivedData -type d -name "Appice.doccarchive" | head -n1)
+          xcrun docc process-archive transform-for-static-hosting \
+            "$ARCHIVE" \
+            --hosting-base-path /sdk/ios/reference \
+            --output-path ./out
+
+      - name: Checkout dev portal repo
+        uses: actions/checkout@v4
+        with:
+          repository: Diliphome/appice-dev
+          token: ${{ secrets.APPICE_DEV_PUSH_TOKEN }}
+          path: appice-dev
+
+      - name: Replace reference folder
+        run: |
+          rm -rf appice-dev/sdk/ios/reference
+          mkdir -p appice-dev/sdk/ios/reference
+          cp -R ./out/* appice-dev/sdk/ios/reference/
+
+      - name: Commit and push
+        working-directory: appice-dev
+        run: |
+          git config user.name  "appice-docs-bot"
+          git config user.email "docs-bot@appice.ai"
+          git add sdk/ios/reference
+          if git diff --cached --quiet; then
+            echo "No doc changes — exiting cleanly"
+            exit 0
+          fi
+          git commit -m "iOS SDK docs ${GITHUB_REF_NAME} — DocC autogen"
+          git push origin main

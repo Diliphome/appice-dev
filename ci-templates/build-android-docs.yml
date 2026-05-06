@@ -1,0 +1,63 @@
+# ci-templates/build-android-docs.yml
+# Place this in: appice-android SDK repo at .github/workflows/build-android-docs.yml
+#
+# Prerequisites in the SDK repo:
+#   - Dokka plugin applied in build.gradle.kts:
+#       plugins { id("org.jetbrains.dokka") version "1.9.20" }
+#   - Optional: Dokka HTML config to set the base output path
+#
+# Required secrets:
+#   APPICE_DEV_PUSH_TOKEN  — fine-grained PAT with write access to appice-dev repo only
+
+name: Build Android Dokka docs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SDK
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build Dokka HTML
+        run: ./gradlew :appice-android:dokkaHtml
+
+      - name: Checkout dev portal repo
+        uses: actions/checkout@v4
+        with:
+          repository: Diliphome/appice-dev
+          token: ${{ secrets.APPICE_DEV_PUSH_TOKEN }}
+          path: appice-dev
+
+      - name: Replace reference folder
+        run: |
+          rm -rf appice-dev/sdk/android/reference
+          mkdir -p appice-dev/sdk/android/reference
+          cp -R appice-android/build/dokka/html/* appice-dev/sdk/android/reference/
+
+      - name: Commit and push
+        working-directory: appice-dev
+        run: |
+          git config user.name  "appice-docs-bot"
+          git config user.email "docs-bot@appice.ai"
+          git add sdk/android/reference
+          if git diff --cached --quiet; then
+            echo "No doc changes — exiting cleanly"
+            exit 0
+          fi
+          git commit -m "Android SDK docs ${GITHUB_REF_NAME} — Dokka autogen"
+          git push origin main

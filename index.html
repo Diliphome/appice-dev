@@ -115,21 +115,29 @@
 <section class="grid-section grid-section--alt">
   <div class="inner">
     <h2 class="section-title">REST API</h2>
-    <p class="section-sub">Send events, identify users and receive webhooks server-side. Pair with the SDKs or use standalone for backend integrations.</p>
-    <div class="card-grid card-grid--3">
+    <p class="section-sub">Send events, identify users and receive webhooks server-side. Browse the full spec, grab the Postman collection, or jump straight to a topic.</p>
+    <div class="card-grid card-grid--4">
+      <a href="api/reference.html" class="card">
+        <h3 class="card__title">Full reference</h3>
+        <p class="card__desc">Every endpoint, request and response. OpenAPI spec rendered with Redoc.</p>
+        <span class="card__cta">Browse →</span>
+      </a>
       <a href="api/authentication.html" class="card">
         <h3 class="card__title">Authentication</h3>
-        <p class="card__desc">How to authenticate API requests.</p>
+        <p class="card__desc">Bearer + workspace headers. Where to get keys.</p>
       </a>
-      <a href="api/events.html" class="card">
-        <h3 class="card__title">Events</h3>
-        <p class="card__desc">Send behavioural events server-side.</p>
+      <a href="api/rate-limits.html" class="card">
+        <h3 class="card__title">Rate limits</h3>
+        <p class="card__desc">Per-workspace limits and the 429 response.</p>
       </a>
       <a href="api/webhooks.html" class="card">
         <h3 class="card__title">Webhooks</h3>
         <p class="card__desc">Receive real-time decisions and outcomes.</p>
       </a>
     </div>
+    <p style="margin-top:18px;font-size:13px;color:rgba(5,13,31,.55)">
+      Need a sandbox? <a href="sandbox-access.html">Request sandbox access</a> · No keys yet? See <a href="api/authentication.html#get-keys">how to issue them</a>.
+    </p>
   </div>
 </section>
 

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Get Sandbox Access — Appice Developers</title>
+  <meta name="description" content="Request sandbox credentials for the Appice platform. Same-day turnaround for verified business addresses.">
+  <link rel="canonical" href="https://dev.appice.ai/sandbox-access.html">
+  <link rel="stylesheet" href="assets/css/main-nav.css?v=1">
+  <link rel="stylesheet" href="assets/css/styles.css?v=1">
+  <meta name="theme-color" content="#0050FF">
+  <link rel="icon" type="image/png" href="https://appice.ai/img/appice-help-center/assets/images/appice-icon.png">
+  <style>
+    .form-card {
+      max-width: 720px; margin: 48px auto; background: #fff;
+      border: 1px solid var(--border); border-radius: 16px;
+      box-shadow: var(--shadow); padding: 40px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-row label { display: block; font-size: 13px; font-weight: 600; color: #050D1F; margin-bottom: 6px; }
+    .form-row input, .form-row select, .form-row textarea {
+      width: 100%; padding: 11px 14px; font-size: 14px;
+      border: 1px solid var(--border); border-radius: 8px;
+      font-family: inherit; background: #fff; color: #050D1F;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .form-row input:focus, .form-row select:focus, .form-row textarea:focus {
+      outline: none; border-color: #0050FF;
+      box-shadow: 0 0 0 3px rgba(0,80,255,.12);
+    }
+    .form-row textarea { min-height: 96px; resize: vertical; font-family: inherit; }
+    .form-row .help { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .form-actions { margin-top: 24px; display: flex; gap: 12px; align-items: center; }
+    .checkbox-row { display: flex; gap: 10px; align-items: flex-start; padding: 12px 0; }
+    .checkbox-row input[type="checkbox"] { margin-top: 3px; }
+    .checkbox-row label { font-size: 14px; color: #374151; line-height: 1.5; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo"><img src="https://appice.ai/img/220426_appice_logo.png" alt="Appice" style="height:36px;width:auto"></a>
+    <div class="nav__links" style="font-size:13px;color:#5B6B8A">Developer Portal — Sandbox</div>
+    <div class="nav__right">
+      <a href="/" class="btn btn--blue">Back to portal</a>
+    </div>
+  </div>
+</nav>
+
+<main style="background:#F7F9FC;min-height:calc(100vh - 72px);padding:24px">
+  <section style="text-align:center;padding:48px 24px 0">
+    <h1 style="font-size:36px;font-weight:800;margin:0 0 12px;letter-spacing:-.02em">Get sandbox access</h1>
+    <p style="color:#5B6B8A;margin:0 0 8px;max-width:560px;margin-left:auto;margin-right:auto;line-height:1.55">Sandbox credentials, sample data, 30 days to build. Same-day turnaround for verified business addresses.</p>
+  </section>
+
+  <form name="sandbox-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/sandbox/thanks.html" class="form-card">
+    <input type="hidden" name="form-name" value="sandbox-request">
+    <p style="display:none"><label>Don't fill this: <input name="bot-field"></label></p>
+
+    <div class="form-row">
+      <div>
+        <label for="firstName">First name *</label>
+        <input id="firstName" name="firstName" type="text" required autocomplete="given-name">
+      </div>
+      <div>
+        <label for="lastName">Last name *</label>
+        <input id="lastName" name="lastName" type="text" required autocomplete="family-name">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="email">Work email *</label>
+        <input id="email" name="email" type="email" required autocomplete="email">
+        <span class="help">We can only issue sandboxes to business addresses.</span>
+      </div>
+      <div>
+        <label for="company">Company *</label>
+        <input id="company" name="company" type="text" required autocomplete="organization">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="role">Role *</label>
+        <select id="role" name="role" required>
+          <option value="">Select your role</option>
+          <option>Mobile developer</option>
+          <option>Backend developer</option>
+          <option>Full-stack developer</option>
+          <option>Engineering lead / Tech lead</option>
+          <option>Solutions architect</option>
+          <option>CTO / VP Engineering</option>
+          <option>Product manager</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div>
+        <label for="region">Data residency region *</label>
+        <select id="region" name="region" required>
+          <option value="">Pick one</option>
+          <option>India</option>
+          <option>GCC</option>
+          <option>EU</option>
+          <option>Global (no residency requirement)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row full">
+      <div>
+        <label for="useCase">What are you planning to build? *</label>
+        <textarea id="useCase" name="useCase" required placeholder="e.g., Real-time fraud alerts via Inform; SDK integration into our retail banking app; PoC for cross-sell decisions in our wealth platform."></textarea>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div>
+        <label for="platforms">Platforms you'll integrate</label>
+        <select id="platforms" name="platforms" multiple style="height:auto;min-height:96px">
+          <option>iOS</option>
+          <option>Android</option>
+          <option>Web</option>
+          <option>React Native</option>
+          <option>Server-side (REST API)</option>
+        </select>
+        <span class="help">Hold Cmd / Ctrl to select multiple.</span>
+      </div>
+      <div>
+        <label for="timeframe">Timeline</label>
+        <select id="timeframe" name="timeframe">
+          <option>This week</option>
+          <option>Next 2 weeks</option>
+          <option>This quarter</option>
+          <option>Just exploring</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="checkbox-row">
+      <input id="commercial" name="commercial" type="checkbox">
+      <label for="commercial">Have a commercial discussion in parallel with sandbox provisioning. (Optional — if checked, our team will reach out within 1 business day.)</label>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn--blue" style="padding:13px 28px;font-size:15px">Request sandbox</button>
+      <span style="font-size:13px;color:#5B6B8A">Same-day turnaround for verified addresses.</span>
+    </div>
+  </form>
+
+  <section style="text-align:center;padding:0 24px 64px;color:#5B6B8A;font-size:14px">
+    Already have credentials? <a href="https://panel.appice.io/login" target="_blank" style="color:#0050FF;font-weight:600">Sign in</a> · Need help? <a href="mailto:dev@appice.ai" style="color:#0050FF;font-weight:600">dev@appice.ai</a>
+  </section>
+</main>
+
+</body>
+</html>

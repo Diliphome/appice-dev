@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deprecations — Appice Developers</title>
+  <meta name="description" content="What's deprecated, when it sunsets, and what to migrate to.">
+  <link rel="canonical" href="https://dev.appice.ai/deprecations.html">
+  <link rel="stylesheet" href="assets/css/main-nav.css?v=1">
+  <link rel="stylesheet" href="assets/css/styles.css?v=1">
+  <meta name="theme-color" content="#0050FF">
+  <link rel="icon" type="image/png" href="https://appice.ai/img/appice-help-center/assets/images/appice-icon.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo"><img src="https://appice.ai/img/220426_appice_logo.png" alt="Appice" style="height:36px;width:auto"></a>
+    <div class="nav__links" style="font-size:13px;color:#5B6B8A">Developer Portal — Deprecations</div>
+    <div class="nav__right">
+      <a href="/changelog.html" class="nav__login-btn">Changelog</a>
+      <a href="/" class="btn btn--blue">Back to portal</a>
+    </div>
+  </div>
+</nav>
+
+<div class="article-shell">
+  <div class="article-layout">
+    <aside class="sidebar">
+      <div class="sb-section">
+        <span class="sb-label">Resources</span>
+        <a href="/changelog.html" class="sb-link">Changelog</a>
+        <a href="/deprecations.html" class="sb-link is-active">Deprecations</a>
+        <a href="/api/reference.html" class="sb-link">API Reference</a>
+      </div>
+    </aside>
+
+    <article class="doc">
+      <header class="doc-header">
+        <div class="breadcrumbs"><a href="/">Developers</a><span>›</span> Deprecations</div>
+        <h1>Deprecations</h1>
+        <p>Anything we plan to remove. Each entry has a sunset date and the recommended migration. We follow a 12-month minimum deprecation window for SDKs and a 6-month minimum for API endpoints.</p>
+      </header>
+
+      <div class="doc-body">
+
+        <section class="doc-section">
+          <h2 id="active">Active deprecations</h2>
+          <div class="callout">
+            <div><strong>None right now.</strong> v5 is a clean cut. The next deprecations will appear here as the platform evolves; subscribe to the <a href="/changelog.html">changelog</a> to be notified.</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="policy">Deprecation policy</h2>
+          <ul>
+            <li><strong>SDKs:</strong> minimum 12 months from announcement to removal. Deprecated SDK versions still receive critical security fixes.</li>
+            <li><strong>REST API endpoints:</strong> minimum 6 months from announcement to removal. Deprecated endpoints respond with the <code>X-Appice-Deprecated</code> header indicating the sunset date.</li>
+            <li><strong>Major versions of the API:</strong> N − 1 (one major version back) is supported indefinitely on existing deployments.</li>
+          </ul>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="archive">Archive (recently removed)</h2>
+          <p>Versions removed more than 6 months ago are archived to <a href="https://web.archive.org/web/*/dev.appice.ai/deprecations.html">the Wayback Machine</a>. The current page shows everything that's removed within the last 6 months and everything still active.</p>
+          <ul>
+            <li>v4 SDK series (iOS, Android, Web) — removed 2026-04-01. Final release: v4.18.2 (2025-12-12). Migration guide: <a href="https://github.com/appice/migration-v4-to-v5">github.com/appice/migration-v4-to-v5</a>.</li>
+          </ul>
+        </section>
+
+      </div>
+    </article>
+  </div>
+</div>
+
+</body>
+</html>

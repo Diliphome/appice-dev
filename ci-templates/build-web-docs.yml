@@ -1,0 +1,69 @@
+# ci-templates/build-web-docs.yml
+# Place this in: appice-web SDK repo at .github/workflows/build-web-docs.yml
+#
+# Prerequisites in the SDK repo:
+#   - typedoc as a dev dependency:  npm install --save-dev typedoc
+#   - typedoc.json config:
+#       {
+#         "entryPoints": ["src/index.ts"],
+#         "out": "out-typedoc",
+#         "name": "Appice Web SDK",
+#         "readme": "none",
+#         "navigationLinks": { "Portal": "https://dev.appice.ai" }
+#       }
+#
+# Required secrets:
+#   APPICE_DEV_PUSH_TOKEN
+
+name: Build Web TypeDoc docs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout SDK
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Build TypeDoc
+        run: npx typedoc
+
+      - name: Checkout dev portal repo
+        uses: actions/checkout@v4
+        with:
+          repository: Diliphome/appice-dev
+          token: ${{ secrets.APPICE_DEV_PUSH_TOKEN }}
+          path: appice-dev
+
+      - name: Replace reference folder
+        run: |
+          rm -rf appice-dev/sdk/web/reference
+          mkdir -p appice-dev/sdk/web/reference
+          cp -R out-typedoc/* appice-dev/sdk/web/reference/
+
+      - name: Commit and push
+        working-directory: appice-dev
+        run: |
+          git config user.name  "appice-docs-bot"
+          git config user.email "docs-bot@appice.ai"
+          git add sdk/web/reference
+          if git diff --cached --quiet; then
+            echo "No doc changes — exiting cleanly"
+            exit 0
+          fi
+          git commit -m "Web SDK docs ${GITHUB_REF_NAME} — TypeDoc autogen"
+          git push origin main

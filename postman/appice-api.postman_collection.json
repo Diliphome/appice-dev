@@ -1,0 +1,173 @@
+{
+  "info": {
+    "name": "Appice REST API v5",
+    "description": "Server-side REST API for the Appice real-time decisioning platform. Generated from openapi/appice-api.yaml. See https://dev.appice.ai/api/reference.html",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "appice-rest-api-v5"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{APPICE_API_KEY}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "https://api.appice.io/v1", "description": "Swap to https://api.in.appice.io/v1 for India, .gcc. for GCC, .eu. for EU" },
+    { "key": "APPICE_API_KEY", "value": "REPLACE_ME", "description": "Server API key — get one in panel.appice.io > Settings > API Keys" },
+    { "key": "APPICE_WORKSPACE", "value": "REPLACE_ME", "description": "Workspace ID — panel.appice.io > Settings > Workspace" }
+  ],
+  "item": [
+    {
+      "name": "Ingest",
+      "item": [
+        {
+          "name": "POST /events — Ingest events",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/events", "host": ["{{BASE_URL}}"], "path": ["events"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"events\": [\n    {\n      \"userId\": \"user_4711\",\n      \"event\": \"Loan Disbursed\",\n      \"timestamp\": \"2026-05-06T10:33:11Z\",\n      \"properties\": {\n        \"amount\": 250000,\n        \"currency\": \"INR\",\n        \"product\": \"personal-loan\"\n      }\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /users — Identify user",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/users", "host": ["{{BASE_URL}}"], "path": ["users"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"user_4711\",\n  \"traits\": {\n    \"email\": \"asha@example.com\",\n    \"phone\": \"+919812345678\",\n    \"plan\": \"premium\",\n    \"kycVerified\": true,\n    \"onboardingDate\": \"2025-08-12\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inform",
+      "item": [
+        {
+          "name": "POST /inform/trigger — Trigger Inform via HashID",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/inform/trigger", "host": ["{{BASE_URL}}"], "path": ["inform", "trigger"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hashId\": \"h_8f3a4b1c2e_REPLACE\",\n  \"templateId\": \"tpl_fraud_alert_v3\",\n  \"channel\": \"push\",\n  \"variables\": {\n    \"last4\": \"4422\",\n    \"amount\": \"\\u20b94,500\",\n    \"merchant\": \"Acme Stores\"\n  },\n  \"priority\": \"transactional\"\n}"
+            }
+          }
+        },
+        {
+          "name": "GET /inform/{deliveryId} — Get delivery status",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{BASE_URL}}/inform/REPLACE_DELIVERY_ID", "host": ["{{BASE_URL}}"], "path": ["inform", "REPLACE_DELIVERY_ID"] },
+            "header": [{ "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "GET /webhooks — List",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{BASE_URL}}/webhooks", "host": ["{{BASE_URL}}"], "path": ["webhooks"] },
+            "header": [{ "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" }]
+          }
+        },
+        {
+          "name": "POST /webhooks — Create",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/webhooks", "host": ["{{BASE_URL}}"], "path": ["webhooks"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://hooks.your-app.com/appice\",\n  \"events\": [\"campaign.sent\", \"campaign.opened\", \"user.opted_out\"],\n  \"description\": \"Production hook\",\n  \"signingSecret\": \"REPLACE_WITH_RANDOM_32_BYTES\"\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /webhooks/{id}/test — Send test payload",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/webhooks/REPLACE_WEBHOOK_ID/test", "host": ["{{BASE_URL}}"], "path": ["webhooks", "REPLACE_WEBHOOK_ID", "test"] },
+            "header": [{ "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Segments & Campaigns",
+      "item": [
+        {
+          "name": "POST /segments — Create",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/segments", "host": ["{{BASE_URL}}"], "path": ["segments"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"GCC premium customers — 30d active\",\n  \"description\": \"Premium-tier users in the GCC region with activity in the last 30 days\",\n  \"definition\": {\n    \"and\": [\n      { \"traits.region\": \"GCC\" },\n      { \"traits.plan\": \"premium\" },\n      { \"lastActiveAt\": { \"gte\": \"now-30d\" } }\n    ]\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "POST /campaigns/{id}/trigger — Trigger campaign",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/campaigns/REPLACE_CAMPAIGN_ID/trigger", "host": ["{{BASE_URL}}"], "path": ["campaigns", "REPLACE_CAMPAIGN_ID", "trigger"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hashIds\": [\"h_abc123\", \"h_def456\"],\n  \"variables\": {\n    \"offerCode\": \"SUMMER25\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Allyvate",
+      "item": [
+        {
+          "name": "POST /allyvate/decide — Request decision",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{BASE_URL}}/allyvate/decide", "host": ["{{BASE_URL}}"], "path": ["allyvate", "decide"] },
+            "header": [
+              { "key": "X-Appice-Workspace", "value": "{{APPICE_WORKSPACE}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hashId\": \"h_8f3a4b1c2e\",\n  \"context\": {\n    \"channel\": \"app\",\n    \"surface\": \"post-login-dashboard\",\n    \"locale\": \"en-AE\"\n  },\n  \"guardrails\": {\n    \"excludeCategories\": [\"promotional\"],\n    \"maxDailyContacts\": 2\n  }\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

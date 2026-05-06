@@ -1,0 +1,586 @@
+openapi: 3.0.3
+info:
+  title: Appice REST API
+  version: "5.0.0"
+  description: |
+    Server-side REST API for the Appice real-time decisioning platform.
+
+    The API surface is intentionally small. Most of your integration with Appice happens client-side
+    via the [iOS](https://dev.appice.ai/sdk/ios/), [Android](https://dev.appice.ai/sdk/android/),
+    [Web](https://dev.appice.ai/sdk/web/), and [React Native](https://dev.appice.ai/sdk/react-native/) SDKs.
+    The endpoints below are for server-side workloads:
+
+      - **Ingest** — push events from your backend (kiosk, IVR, server-side conversion)
+      - **Identify** — upsert user profile attributes from your CRM or core banking
+      - **Inform** — trigger a notification without sending PII; HashID-only delivery
+      - **Webhooks** — subscribe to lifecycle events (campaign sent, conversion, opt-out)
+      - **Segments / Campaigns** — programmatic creation and trigger
+      - **Allyvate** — request a next-best-action decision
+
+    All endpoints accept JSON. All endpoints return JSON. UTF-8 throughout. Timestamps are ISO-8601.
+
+    ## Authentication
+    Pass your API key as `Authorization: Bearer <api_key>` and the workspace ID as `X-Appice-Workspace: <workspace_id>`.
+    See [Authentication](https://dev.appice.ai/api/authentication.html).
+
+    ## Rate limits
+    Default 600 requests/min/workspace for write endpoints, 60 requests/min/workspace for read endpoints.
+    Hard ceiling is 5000 req/min for ingest under elevated tiers. See [Rate Limits](https://dev.appice.ai/api/rate-limits.html).
+
+    ## Regions
+    The API has regional endpoints that enforce data residency. Match your workspace's region:
+
+      - Global: `https://api.appice.io`
+      - India: `https://api.in.appice.io`
+      - GCC: `https://api.gcc.appice.io`
+      - EU: `https://api.eu.appice.io`
+
+  contact:
+    name: Appice Developer Support
+    email: dev@appice.ai
+    url: https://dev.appice.ai/
+
+servers:
+  - url: https://api.appice.io/v1
+    description: Global
+  - url: https://api.in.appice.io/v1
+    description: India
+  - url: https://api.gcc.appice.io/v1
+    description: GCC (Gulf)
+  - url: https://api.eu.appice.io/v1
+    description: EU
+
+tags:
+  - name: Ingest
+    description: Server-side event and profile ingest
+  - name: Inform
+    description: PII-preserving notification trigger
+  - name: Webhooks
+    description: Outbound event subscriptions
+  - name: Segments
+    description: Programmatic segment management
+  - name: Campaigns
+    description: Programmatic campaign management
+  - name: Allyvate
+    description: Decision orchestration
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+
+  /events:
+    post:
+      tags: [Ingest]
+      operationId: ingestEvents
+      summary: Ingest server-side events
+      description: |
+        Push one or more events from your backend. Use this for server-confirmed signals that don't
+        originate from a device — for example, a successful loan disbursement, a kiosk transaction,
+        or a fraud-cleared payment.
+
+        Events are batched and processed asynchronously. The API returns 202 immediately and writes
+        to the decisioning pipeline within ~500ms.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [events]
+              properties:
+                events:
+                  type: array
+                  minItems: 1
+                  maxItems: 1000
+                  items:
+                    $ref: '#/components/schemas/Event'
+            examples:
+              singleEvent:
+                summary: One event
+                value:
+                  events:
+                    - userId: "user_4711"
+                      event: "Loan Disbursed"
+                      properties:
+                        amount: 250000
+                        currency: "INR"
+                        product: "personal-loan"
+                      timestamp: "2026-05-06T10:33:11Z"
+      responses:
+        '202':
+          description: Accepted for processing
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accepted: { type: integer, example: 1 }
+                  rejected: { type: integer, example: 0 }
+                  rejectedReasons:
+                    type: array
+                    items: { type: string }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /users:
+    post:
+      tags: [Ingest]
+      operationId: identifyUser
+      summary: Identify or update a user
+      description: |
+        Upsert a user profile. Use this to push attributes from your CRM, core banking, or any
+        system-of-record. Calling this for an existing `userId` merges traits.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIdentify'
+            examples:
+              basicIdentify:
+                value:
+                  userId: "user_4711"
+                  traits:
+                    email: "asha@example.com"
+                    phone: "+919812345678"
+                    plan: "premium"
+                    kycVerified: true
+                    onboardingDate: "2025-08-12"
+      responses:
+        '200':
+          description: User upserted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId: { type: string }
+                  hashId: { type: string, description: "Stable PII-free identifier for this user" }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /inform/trigger:
+    post:
+      tags: [Inform]
+      operationId: triggerInform
+      summary: Trigger a notification by HashID (PII-free)
+      description: |
+        Trigger an Inform notification using only the user's HashID. PII never crosses the wire.
+        The HashID was returned to you when the user was first identified (via SDK or `/users`).
+
+        Use this for regulator-friendly server-side triggers — fraud alert, credit-limit reached,
+        OTP relay, transaction confirmation.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [hashId, templateId]
+              properties:
+                hashId: { type: string, example: "h_8f3a4b1c2e..." }
+                templateId: { type: string, example: "tpl_fraud_alert_v3" }
+                channel:
+                  type: string
+                  enum: [push, sms, whatsapp, email, in-app]
+                variables:
+                  type: object
+                  additionalProperties: { type: string }
+                  example:
+                    last4: "4422"
+                    amount: "₹4,500"
+                    merchant: "Acme Stores"
+                priority:
+                  type: string
+                  enum: [transactional, promotional]
+                  default: transactional
+      responses:
+        '202':
+          description: Accepted for delivery
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deliveryId: { type: string }
+                  estimatedDelivery: { type: string, format: date-time }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '404':
+          description: Template or HashID not found
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+  /inform/{deliveryId}:
+    get:
+      tags: [Inform]
+      operationId: getInformStatus
+      summary: Get delivery status of an Inform send
+      parameters:
+        - in: path
+          name: deliveryId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Delivery status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deliveryId: { type: string }
+                  status:
+                    type: string
+                    enum: [queued, dispatched, delivered, failed, opened, clicked]
+                  channel: { type: string }
+                  sentAt: { type: string, format: date-time }
+                  deliveredAt: { type: string, format: date-time, nullable: true }
+                  openedAt: { type: string, format: date-time, nullable: true }
+                  clickedAt: { type: string, format: date-time, nullable: true }
+                  errorCode: { type: string, nullable: true }
+        '404':
+          description: deliveryId not found
+
+  /webhooks:
+    get:
+      tags: [Webhooks]
+      operationId: listWebhooks
+      summary: List configured webhooks
+      responses:
+        '200':
+          description: List of webhooks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  webhooks:
+                    type: array
+                    items: { $ref: '#/components/schemas/Webhook' }
+
+    post:
+      tags: [Webhooks]
+      operationId: createWebhook
+      summary: Create a webhook subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [url, events]
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  example: "https://hooks.your-app.com/appice"
+                events:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                      - campaign.sent
+                      - campaign.delivered
+                      - campaign.opened
+                      - campaign.clicked
+                      - campaign.failed
+                      - user.opted_out
+                      - user.opted_in
+                      - decision.requested
+                      - decision.actioned
+                description:
+                  type: string
+                  maxLength: 200
+                signingSecret:
+                  type: string
+                  description: "Optional. If provided, all payloads will be HMAC-SHA256 signed in the X-Appice-Signature header."
+      responses:
+        '201':
+          description: Webhook created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Webhook' }
+
+  /webhooks/{webhookId}:
+    delete:
+      tags: [Webhooks]
+      operationId: deleteWebhook
+      summary: Delete a webhook
+      parameters:
+        - in: path
+          name: webhookId
+          required: true
+          schema: { type: string }
+      responses:
+        '204': { description: Deleted }
+        '404': { description: Not found }
+
+  /webhooks/{webhookId}/test:
+    post:
+      tags: [Webhooks]
+      operationId: testWebhook
+      summary: Send a test payload to a webhook
+      parameters:
+        - in: path
+          name: webhookId
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Test result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode: { type: integer }
+                  responseTimeMs: { type: integer }
+                  bodyPreview: { type: string }
+
+  /segments:
+    post:
+      tags: [Segments]
+      operationId: createSegment
+      summary: Create a segment programmatically
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, definition]
+              properties:
+                name: { type: string, example: "GCC premium customers, 30d active" }
+                description: { type: string }
+                definition:
+                  type: object
+                  description: "JSON DSL for segment rules. See https://dev.appice.ai/api/segment-dsl.html"
+                  example:
+                    and:
+                      - traits.region: "GCC"
+                      - traits.plan: "premium"
+                      - lastActiveAt: { gte: "now-30d" }
+      responses:
+        '201':
+          description: Segment created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Segment' }
+
+  /campaigns/{campaignId}/trigger:
+    post:
+      tags: [Campaigns]
+      operationId: triggerCampaign
+      summary: Trigger a campaign for one or more users
+      parameters:
+        - in: path
+          name: campaignId
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [hashIds]
+              properties:
+                hashIds:
+                  type: array
+                  items: { type: string }
+                  minItems: 1
+                  maxItems: 10000
+                variables:
+                  type: object
+                  additionalProperties: { type: string }
+      responses:
+        '202':
+          description: Triggered
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId: { type: string }
+                  enqueued: { type: integer }
+
+  /allyvate/decide:
+    post:
+      tags: [Allyvate]
+      operationId: requestDecision
+      summary: Request a next-best-action decision
+      description: |
+        Synchronously request a decision from Allyvate. Use this when your backend wants to know
+        what action to take **right now** for a given user — for example, before serving a webpage,
+        before deciding what to surface in a logged-in dashboard, or before a synchronous IVR step.
+
+        Latency target: P95 ≤ 100ms within the same region.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [hashId, context]
+              properties:
+                hashId: { type: string }
+                context:
+                  type: object
+                  description: "Channel and surface where the action will be taken"
+                  properties:
+                    channel:
+                      type: string
+                      enum: [web, app, push, email, sms, whatsapp, ivr, branch]
+                    surface:
+                      type: string
+                      example: "post-login-dashboard"
+                    locale: { type: string, example: "en-AE" }
+                guardrails:
+                  type: object
+                  properties:
+                    excludeCategories:
+                      type: array
+                      items: { type: string }
+                      example: ["promotional"]
+                    maxDailyContacts: { type: integer, example: 2 }
+      responses:
+        '200':
+          description: Decision result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  decisionId: { type: string }
+                  action:
+                    type: object
+                    properties:
+                      type: { type: string, example: "in-app-message" }
+                      contentId: { type: string }
+                      ranking: { type: number, format: float }
+                      reason:
+                        type: string
+                        description: "Human-readable explanation, e.g. 'Eligible: cross-sell, not contacted in 14d'"
+                  alternatives:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type: { type: string }
+                        contentId: { type: string }
+                        ranking: { type: number, format: float }
+        '204': { description: "No eligible action — guardrails or eligibility excluded all candidates" }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '429': { $ref: '#/components/responses/RateLimited' }
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API key (issued in panel.appice.io → Settings → API)
+
+  schemas:
+    Event:
+      type: object
+      required: [event, timestamp]
+      properties:
+        userId:
+          type: string
+          description: "Either userId or hashId is required"
+          example: "user_4711"
+        hashId:
+          type: string
+          description: "Either userId or hashId is required"
+        event:
+          type: string
+          example: "Product Viewed"
+        properties:
+          type: object
+          additionalProperties: true
+          example:
+            sku: "INSURE-PLAT-2026"
+            price: 1299.00
+            currency: "USD"
+        timestamp:
+          type: string
+          format: date-time
+          example: "2026-05-06T10:33:11Z"
+        context:
+          type: object
+          properties:
+            ip: { type: string }
+            userAgent: { type: string }
+            locale: { type: string, example: "en-IN" }
+            source:
+              type: string
+              enum: [server, kiosk, ivr, branch, partner]
+              default: server
+
+    UserIdentify:
+      type: object
+      required: [userId, traits]
+      properties:
+        userId: { type: string }
+        traits:
+          type: object
+          additionalProperties: true
+
+    Webhook:
+      type: object
+      properties:
+        id: { type: string }
+        url: { type: string, format: uri }
+        events:
+          type: array
+          items: { type: string }
+        description: { type: string }
+        createdAt: { type: string, format: date-time }
+        signedWithHmac: { type: boolean }
+
+    Segment:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        memberCount: { type: integer }
+        createdAt: { type: string, format: date-time }
+
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+        code: { type: string }
+        requestId: { type: string }
+        details:
+          type: array
+          items:
+            type: object
+            properties:
+              field: { type: string }
+              issue: { type: string }
+
+  responses:
+    BadRequest:
+      description: Validation failure
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid credentials
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    RateLimited:
+      description: Too many requests
+      headers:
+        Retry-After:
+          schema: { type: integer }
+          description: "Seconds to wait before retrying"
+        X-Appice-RateLimit-Remaining:
+          schema: { type: integer }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

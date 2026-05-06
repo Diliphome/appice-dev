@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Reference — Appice Developers</title>
+  <meta name="description" content="Server-side REST API reference for Appice. Ingest events, trigger Inform, manage webhooks, request Allyvate decisions.">
+  <link rel="canonical" href="https://dev.appice.ai/api/reference.html">
+  <link rel="stylesheet" href="../assets/css/main-nav.css?v=1">
+  <meta name="theme-color" content="#0050FF">
+  <link rel="icon" type="image/png" href="https://appice.ai/img/appice-help-center/assets/images/appice-icon.png">
+  <style>
+    body { margin: 0; font-family: Inter, system-ui, sans-serif; }
+    redoc {
+      --redoc-primary-color: #0050FF;
+    }
+    .ref-bar {
+      position: sticky; top: 72px; z-index: 50;
+      background: #fff; border-bottom: 1px solid #E2EAF6;
+      padding: 12px 24px; display: flex; align-items: center; gap: 16px;
+      font-family: Inter, system-ui, sans-serif; font-size: 13px;
+    }
+    .ref-bar__title { font-weight: 700; color: #050D1F; margin-right: auto; }
+    .ref-bar a {
+      color: #0050FF; text-decoration: none; font-weight: 600;
+      padding: 6px 12px; border: 1px solid #C0D4FF; border-radius: 6px;
+      background: #EEF4FF;
+    }
+    .ref-bar a:hover { background: #DFE9FF; }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo"><img src="https://appice.ai/img/220426_appice_logo.png" alt="Appice" style="height:36px;width:auto"></a>
+    <div class="nav__links" style="font-size:13px;color:#5B6B8A">Developer Portal — REST API Reference</div>
+    <div class="nav__right">
+      <a href="/sandbox-access.html" class="nav__login-btn">Get sandbox</a>
+      <a href="/" class="btn btn--blue">Back to portal</a>
+    </div>
+  </div>
+</nav>
+
+<div class="ref-bar">
+  <span class="ref-bar__title">Appice REST API · v5.0.0</span>
+  <a href="/openapi/appice-api.yaml" download>Download OpenAPI</a>
+  <a href="/postman/appice-api.postman_collection.json" download>Download Postman</a>
+  <a href="/api/authentication.html">Auth</a>
+  <a href="/api/rate-limits.html">Rate limits</a>
+</div>
+
+<redoc spec-url='/openapi/appice-api.yaml'
+       theme='{ "colors": { "primary": { "main": "#0050FF" } }, "typography": { "fontFamily": "Inter, system-ui, sans-serif", "headings": { "fontFamily": "Inter, system-ui, sans-serif", "fontWeight": "700" } } }'
+       hide-download-button
+       expand-responses="200,201,202,204"
+       path-in-middle-panel
+       sort-operations-alphabetically>
+</redoc>
+
+<script src="https://cdn.redoc.ly/redoc/latest/bundles/redoc.standalone.js"> </script>
+
+</body>
+</html>

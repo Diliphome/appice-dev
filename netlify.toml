@@ -19,6 +19,25 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# OpenAPI spec + Postman collection — shorter cache so devs always
+# pull the latest reference.
+[[headers]]
+  for = "/openapi/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
+[[headers]]
+  for = "/postman/*"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+    Access-Control-Allow-Origin = "*"
+
 # Sitemap and robots: short cache so changes propagate.
 [[headers]]
   for = "/sitemap.xml"
@@ -55,3 +74,29 @@
   from = "/guides"
   to = "/guides/index.html"
   status = 200
+
+# 301 redirects: legacy /quickstart/<sdk>.html URLs (used by the
+# initial dev-portal starter) → canonical /sdk/<sdk>/quickstart.html.
+# Keeps any external link to the older URL pattern alive.
+[[redirects]]
+  from = "/quickstart/ios.html"
+  to = "/sdk/ios/quickstart.html"
+  status = 301
+[[redirects]]
+  from = "/quickstart/android.html"
+  to = "/sdk/android/quickstart.html"
+  status = 301
+[[redirects]]
+  from = "/quickstart/web.html"
+  to = "/sdk/web/quickstart.html"
+  status = 301
+[[redirects]]
+  from = "/quickstart/react-native.html"
+  to = "/sdk/react-native/quickstart.html"
+  status = 301
+
+# Custom 404 page (the imported 404.html).
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404

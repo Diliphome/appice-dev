@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>First Decision Loop — Appice Developers</title>
+  <meta name="description" content="A 30-minute end-to-end walkthrough: track an event, get a next-best-action decision from Allyvate, render an in-app message, fire an Inform notification, and close the loop with a webhook.">
+  <link rel="canonical" href="https://dev.appice.ai/guides/first-decision-loop.html">
+  <link rel="stylesheet" href="../assets/css/main-nav.css?v=1">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=1">
+  <meta name="theme-color" content="#0050FF">
+  <link rel="icon" type="image/png" href="https://appice.ai/img/appice-help-center/assets/images/appice-icon.png">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__logo"><img src="https://appice.ai/img/220426_appice_logo.png" alt="Appice" style="height:36px;width:auto"></a>
+    <div class="nav__links" style="font-size:13px;color:#5B6B8A">Developer Portal — Guides</div>
+    <div class="nav__right">
+      <a href="/sandbox-access.html" class="nav__login-btn">Get sandbox</a>
+      <a href="/api/reference.html" class="btn btn--blue">API reference</a>
+    </div>
+  </div>
+</nav>
+
+<div class="article-shell">
+  <div class="article-layout three-col">
+
+    <aside class="sidebar">
+      <div class="sb-section">
+        <span class="sb-label">Guide</span>
+        <a href="#overview" class="sb-link is-active">Overview</a>
+        <a href="#prereqs" class="sb-link">Prerequisites</a>
+        <a href="#step-1" class="sb-link">1 · Track</a>
+        <a href="#step-2" class="sb-link">2 · Decide (Allyvate)</a>
+        <a href="#step-3" class="sb-link">3 · Render in-app</a>
+        <a href="#step-4" class="sb-link">4 · Inform via HashID</a>
+        <a href="#step-5" class="sb-link">5 · Webhooks (close loop)</a>
+        <a href="#step-6" class="sb-link">6 · Verify in dashboard</a>
+        <a href="#what-next" class="sb-link">What's next</a>
+      </div>
+      <div class="sb-section">
+        <span class="sb-label">Other</span>
+        <a href="/quickstart/ios.html" class="sb-link">5-min iOS quickstart</a>
+        <a href="/api/reference.html" class="sb-link">API reference</a>
+      </div>
+    </aside>
+
+    <article class="doc">
+      <header class="doc-header">
+        <div class="breadcrumbs"><a href="/">Developers</a><span>›</span> <a href="/">Guides</a><span>›</span> First decision loop</div>
+        <h1>First decision loop</h1>
+        <p>This is the guide we wrote because it's the one we wished we had. In ~30 minutes you'll wire up the entire loop: a signal lands, Allyvate decides what to do about it, an action surfaces in the app, an Inform notification reaches the user, and a webhook closes the loop back to your backend.</p>
+        <div class="meta-list" style="margin-top:18px">
+          <div class="meta-item"><strong>Time</strong><span>~30 min</span></div>
+          <div class="meta-item"><strong>Stack</strong><span>Any SDK + Node Express</span></div>
+          <div class="meta-item"><strong>Outcome</strong><span>Live decision loop</span></div>
+        </div>
+      </header>
+
+      <div class="doc-body">
+
+        <section class="doc-section">
+          <h2 id="overview">Overview</h2>
+          <p>Most decisioning-platform tutorials stop at "track your first event". This one keeps going — because tracking on its own isn't a decision loop. The full loop has five moves:</p>
+          <ol>
+            <li><strong>Track</strong> a signal from the SDK.</li>
+            <li><strong>Decide</strong> what action to take, by asking Allyvate.</li>
+            <li><strong>Render</strong> the chosen action in-app.</li>
+            <li><strong>Inform</strong> via HashID for the regulator-friendly server-side path.</li>
+            <li><strong>Webhook</strong> the outcome back to your backend so the next decision is better-informed.</li>
+          </ol>
+          <p>You'll come away with end-to-end working code in your sandbox. Replace the example use case (cross-sell of an insurance product after a high-value transaction) with whatever you're actually building.</p>
+          <div class="callout">
+            <div><strong>Use case in this guide —</strong> a customer makes a high-value transaction (signal). Allyvate decides whether to pitch insurance, a credit-line increase, or nothing (decision). The app shows an in-app card (action). The customer sees a transactional WhatsApp confirmation that includes a pitch (Inform). When they click, your backend receives a webhook and logs intent (close loop).</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="prereqs">Prerequisites</h2>
+          <ul>
+            <li>Sandbox credentials — <a href="/sandbox-access.html">request access</a> if you don't have them</li>
+            <li>An SDK installed on at least one platform (5 min) — pick one of <a href="/quickstart/ios.html">iOS</a>, <a href="/quickstart/android.html">Android</a>, <a href="/quickstart/web.html">Web</a>, <a href="/quickstart/react-native.html">React Native</a></li>
+            <li>A Node Express backend you can hit from your phone or browser (any other framework works too — examples use Express, but the API is just HTTP)</li>
+            <li><a href="https://ngrok.com/" target="_blank">ngrok</a> or similar tunnel for testing webhooks locally</li>
+          </ul>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="step-1">Step 1 · Track the signal</h2>
+          <p>Wherever your event originates (client SDK or server-side), track it. We'll use the iOS SDK for the client-side example and curl for the server-side equivalent.</p>
+          <h3>From iOS</h3>
+          <pre class="code">Appice.shared.track(
+  event: "Transaction Completed",
+  properties: [
+    "amount":      4500.00,
+    "currency":    "AED",
+    "merchant":    "Acme Stores",
+    "category":    "retail",
+    "highValue":   true              // your business logic decides this
+  ]
+)</pre>
+          <h3>From your backend (server-side ingest)</h3>
+          <pre class="code">curl -X POST https://api.gcc.appice.io/v1/events \
+  -H "Authorization: Bearer $APPICE_API_KEY" \
+  -H "X-Appice-Workspace: $APPICE_WORKSPACE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "events": [{
+      "userId": "user_4711",
+      "event": "Transaction Completed",
+      "timestamp": "2026-05-06T10:33:11Z",
+      "properties": {
+        "amount": 4500, "currency": "AED",
+        "merchant": "Acme Stores", "category": "retail",
+        "highValue": true
+      }
+    }]
+  }'</pre>
+          <div class="callout success">
+            <div><strong>Verify —</strong> open <a href="https://panel.appice.io/" target="_blank">panel.appice.io → Live Stream</a> and watch the event appear within ~5s.</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="step-2">Step 2 · Ask Allyvate to decide</h2>
+          <p>Now ask the platform what to do for this user, given the recent signal. Make the call from your backend (right after persisting the transaction):</p>
+          <pre class="code">// Express handler
+app.post('/api/transactions', async (req, res) =&gt; {
+  // 1. Persist transaction in your core system
+  await db.transactions.create(req.body);
+
+  // 2. Ingest the signal to Appice
+  await fetch('https://api.gcc.appice.io/v1/events', { /* see step 1 */ });
+
+  // 3. Ask Allyvate for the next-best-action
+  const decision = await fetch('https://api.gcc.appice.io/v1/allyvate/decide', {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${process.env.APPICE_API_KEY}`,
+      'X-Appice-Workspace': process.env.APPICE_WORKSPACE,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      hashId: req.body.hashId,
+      context: {
+        channel: 'app',
+        surface: 'post-transaction-overlay',
+        locale: 'en-AE'
+      },
+      guardrails: {
+        excludeCategories: ['promotional'],   // bank policy: only transactional surfaces here
+        maxDailyContacts: 2
+      }
+    })
+  }).then(r =&gt; r.json());
+
+  // 4. Return your normal response — Allyvate's decision is now logged
+  res.json({ ok: true, decisionId: decision.decisionId });
+});</pre>
+          <p>The response from <code>/v1/allyvate/decide</code> looks like:</p>
+          <pre class="code">{
+  "decisionId": "dec_8f3a4b1c2e",
+  "action": {
+    "type": "in-app-message",
+    "contentId": "msg_insurance_addon_v2",
+    "ranking": 0.87,
+    "reason": "Eligible: cross-sell-insurance, not contacted in 14d, segment: GCC-premium"
+  },
+  "alternatives": [
+    { "type": "in-app-message", "contentId": "msg_credit_limit_increase_v1", "ranking": 0.62 }
+  ]
+}</pre>
+          <p>The SDK on the device automatically polls for eligible messages. With the decision already taken server-side, the SDK gets the answer the moment the user surfaces.</p>
+          <div class="callout warn">
+            <div><strong>About the 100ms latency target —</strong> P95 latency on the regional endpoint should be under 100ms. If you see otherwise, check that you're calling the right region (mismatched region calls are slower because they fall back to global).</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="step-3">Step 3 · Render in-app</h2>
+          <p>This is the easy part — the SDK does the work. If you enabled auto-render in step 0, the in-app message Allyvate just chose will appear automatically on the next view that's rendered.</p>
+          <pre class="code">// iOS — auto-render is on by default in v5
+Appice.shared.inAppMessages.autoRender = true
+
+// Or render manually for full control
+Appice.shared.inAppMessages.fetchEligible { messages in
+  guard let m = messages.first else { return }
+  Appice.shared.inAppMessages.render(m, in: self)
+}</pre>
+          <p>The message can be a card, a modal, an embedded slot, or full-screen. Authoring happens in panel.appice.io; rendering happens via the SDK with no extra integration.</p>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="step-4">Step 4 · Inform via HashID</h2>
+          <p>Now fire a transactional notification — but without sending PII. Your backend has the user's HashID (returned when you first identified them). Use it to trigger:</p>
+          <pre class="code">await fetch('https://api.gcc.appice.io/v1/inform/trigger', {
+  method: 'POST',
+  headers: {
+    'Authorization': `Bearer ${process.env.APPICE_API_KEY}`,
+    'X-Appice-Workspace': process.env.APPICE_WORKSPACE,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    hashId: req.body.hashId,
+    templateId: 'tpl_txn_confirm_with_pitch_v3',
+    channel: 'whatsapp',
+    variables: {
+      last4:    '4422',
+      amount:   'د.إ 4,500',     // localised AED
+      merchant: 'Acme Stores'
+    },
+    priority: 'transactional'
+  })
+});</pre>
+          <p>Notice what's not in this payload: the user's name, phone number, account number. Just the HashID. The Inform service joins to those PII fields server-side, in the same data residency boundary, and never returns them to your backend.</p>
+          <div class="callout tip">
+            <div><strong>Why this matters —</strong> the PII never crossed your application boundary. From a regulator's perspective, your backend is touching only a hashed identifier. The audit trail is provably PII-free at the integration layer.</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="step-5">Step 5 · Webhooks — close the loop</h2>
+          <p>When the user clicks the in-app card or taps the Inform notification, you want to know. Subscribe a webhook:</p>
+          <pre class="code">curl -X POST https://api.gcc.appice.io/v1/webhooks \
+  -H "Authorization: Bearer $APPICE_API_KEY" \
+  -H "X-Appice-Workspace: $APPICE_WORKSPACE" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "url": "https://your-backend.example/appice/webhook",
+    "events": ["campaign.clicked", "decision.actioned", "campaign.opened"],
+    "signingSecret": "REPLACE_WITH_RANDOM_32_BYTES"
+  }'</pre>
+          <p>In your backend, verify the HMAC and act on the event:</p>
+          <pre class="code">import crypto from 'crypto';
+
+app.post('/appice/webhook', express.raw({ type: 'application/json' }), (req, res) =&gt; {
+  const sig = req.header('X-Appice-Signature');
+  const expected = crypto
+    .createHmac('sha256', process.env.APPICE_WEBHOOK_SECRET)
+    .update(req.body)
+    .digest('hex');
+  if (sig !== expected) return res.status(401).send('bad signature');
+
+  const event = JSON.parse(req.body.toString('utf8'));
+  // event.type === 'campaign.clicked' | 'decision.actioned' | ...
+  // event.decisionId, event.contentId, event.hashId
+  recordIntent(event);    // your CRM or core update
+  res.json({ ok: true });
+});</pre>
+          <p>For local testing, run <code>ngrok http 3000</code> and use the ngrok URL as the webhook target while you build.</p>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="step-6">Step 6 · Verify the loop in the dashboard</h2>
+          <ol>
+            <li>Trigger the original signal (a real or simulated transaction).</li>
+            <li>Watch <strong>Live Stream</strong> in panel.appice.io — the <code>Transaction Completed</code> event should land within ~5s.</li>
+            <li>Watch <strong>Decisions</strong> — the Allyvate decision should appear with the chosen action and the reason.</li>
+            <li>Watch the in-app message render on your test device.</li>
+            <li>Watch the Inform delivery in <strong>Inform → Activity</strong> — status should progress from <em>queued</em> → <em>dispatched</em> → <em>delivered</em>.</li>
+            <li>Tap the in-app message — your backend should receive the webhook within ~1s.</li>
+          </ol>
+          <div class="callout success">
+            <div><strong>That's the whole loop.</strong> Signal → decision → action → notification → outcome — observable end-to-end.</div>
+          </div>
+        </section>
+
+        <section class="doc-section">
+          <h2 id="what-next">What's next</h2>
+          <div class="article-links">
+            <a href="/api/reference.html" class="article-link">
+              <strong>Full REST API reference</strong>
+              <span>Every endpoint, every parameter, every response shape.</span>
+            </a>
+            <a href="/sdk/ios/" class="article-link">
+              <strong>SDK reference</strong>
+              <span>Per-platform SDK reference docs — pick the platforms you ship.</span>
+            </a>
+            <a href="https://appice.ai/open-architecture.html" class="article-link">
+              <strong>Open Architecture</strong>
+              <span>How the Traffic Manager lets you switch downstream providers — including us — in under an hour.</span>
+            </a>
+            <a href="https://appice.ai/security.html" class="article-link">
+              <strong>Security &amp; compliance</strong>
+              <span>SOC 2, ISO 27001, regional data residency, the architecture diagrams behind it.</span>
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </article>
+
+    <aside class="toc-card">
+      <h4>On this page</h4>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#prereqs">Prerequisites</a>
+        <a href="#step-1">1 · Track</a>
+        <a href="#step-2">2 · Decide (Allyvate)</a>
+        <a href="#step-3">3 · Render in-app</a>
+        <a href="#step-4">4 · Inform via HashID</a>
+        <a href="#step-5">5 · Webhooks</a>
+        <a href="#step-6">6 · Verify</a>
+        <a href="#what-next">What's next</a>
+      </nav>
+    </aside>
+
+  </div>
+</div>
+
+<footer style="background:#050D1F;color:rgba(255,255,255,.5);padding:24px;font-size:13px;text-align:center;margin-top:48px">
+  © 2026 Appice. <a href="/" style="color:rgba(255,255,255,.7)">Developer Portal</a>
+</footer>
+
+</body>
+</html>

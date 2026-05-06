@@ -1,0 +1,58 @@
+# ci-templates/build-rn-docs.yml
+# Place this in: appice-react-native SDK repo at .github/workflows/build-rn-docs.yml
+#
+# Prerequisites:
+#   - typedoc dev dep, typedoc.json config (same shape as build-web-docs.yml)
+#   - typedoc entry point should be src/index.ts (or wherever your public API exports from)
+#
+# Required secrets:
+#   APPICE_DEV_PUSH_TOKEN
+
+name: Build React Native TypeDoc docs
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+      - run: npx typedoc
+
+      - name: Checkout dev portal repo
+        uses: actions/checkout@v4
+        with:
+          repository: Diliphome/appice-dev
+          token: ${{ secrets.APPICE_DEV_PUSH_TOKEN }}
+          path: appice-dev
+
+      - name: Replace reference folder
+        run: |
+          rm -rf appice-dev/sdk/react-native/reference
+          mkdir -p appice-dev/sdk/react-native/reference
+          cp -R out-typedoc/* appice-dev/sdk/react-native/reference/
+
+      - name: Commit and push
+        working-directory: appice-dev
+        run: |
+          git config user.name  "appice-docs-bot"
+          git config user.email "docs-bot@appice.ai"
+          git add sdk/react-native/reference
+          if git diff --cached --quiet; then
+            echo "No doc changes — exiting cleanly"
+            exit 0
+          fi
+          git commit -m "RN SDK docs ${GITHUB_REF_NAME} — TypeDoc autogen"
+          git push origin main
