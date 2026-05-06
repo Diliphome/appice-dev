@@ -49,8 +49,14 @@ def nav(rel: str) -> str:
   <a href="{rel}sdk/index.html">SDKs</a>
   <a href="{rel}sdk/ios/index.html">— iOS</a>
   <a href="{rel}sdk/android/index.html">— Android</a>
-  <a href="{rel}sdk/web/index.html">— Web</a>
+  <a href="{rel}sdk/kotlin/index.html">— Kotlin</a>
+  <a href="{rel}sdk/flutter/index.html">— Flutter</a>
   <a href="{rel}sdk/react-native/index.html">— React Native</a>
+  <a href="{rel}sdk/web/index.html">— Web</a>
+  <a href="{rel}sdk/unity/index.html">— Unity</a>
+  <a href="{rel}sdk/cordova/index.html">— Cordova</a>
+  <a href="{rel}sdk/ibm-mfp/index.html">— IBM MFP</a>
+  <a href="{rel}sdk/kony/index.html">— Kony</a>
   <a href="{rel}api/index.html">API Reference</a>
   <a href="{rel}guides/index.html">Guides</a>
   <a href="{rel}changelog.html">Changelog</a>
@@ -81,8 +87,14 @@ def footer(rel: str) -> str:
       <h4>SDKs</h4>
       <a href="{rel}sdk/ios/index.html">iOS</a>
       <a href="{rel}sdk/android/index.html">Android</a>
-      <a href="{rel}sdk/web/index.html">Web</a>
+      <a href="{rel}sdk/kotlin/index.html">Kotlin</a>
+      <a href="{rel}sdk/flutter/index.html">Flutter</a>
       <a href="{rel}sdk/react-native/index.html">React Native</a>
+      <a href="{rel}sdk/web/index.html">Web</a>
+      <a href="{rel}sdk/unity/index.html">Unity</a>
+      <a href="{rel}sdk/cordova/index.html">Cordova</a>
+      <a href="{rel}sdk/ibm-mfp/index.html">IBM MFP</a>
+      <a href="{rel}sdk/kony/index.html">Kony</a>
     </div>
     <div class="footer__col">
       <h4>API</h4>
@@ -189,47 +201,34 @@ def todo(label: str) -> str:
 
 
 def home_body() -> str:
-    return f"""<main class="hero hero--landing">
-  <div class="hero__inner">
-    <span class="eyebrow">Developer Portal</span>
-    <h1 class="hero__h1">Build with Appice.</h1>
-    <p class="hero__sub">Real-time decisioning and execution APIs, SDKs and reference implementations for the four runtimes Appice ships today.</p>
-    <div class="hero__ctas">
-      <a href="guides/getting-started.html" class="btn btn--blue">Getting started</a>
-      <a href="api/index.html" class="btn btn--outline">API reference</a>
+    HOME_SDK_ORDER = ["ios","android","kotlin","flutter","react-native","web","unity","cordova","ibm-mfp","kony"]
+    pills = "\n      ".join([f'<a href="sdk/{s}/quickstart.html" class="hero__pill">{SDK_META[s]["name"]}</a>' for s in HOME_SDK_ORDER])
+    cards = "\n      ".join([
+        f'<a href="sdk/{s}/quickstart.html" class="sdk-card">'
+        f'<div class="sdk-card__icon">{SDK_META[s]["icon"]}</div>'
+        f'<div class="sdk-card__tag">{SDK_META[s]["tag"]}</div>'
+        f'<h3 class="sdk-card__name">{SDK_META[s]["name"]}</h3>'
+        f'<p class="sdk-card__desc">{SDK_META[s]["blurb"]}</p>'
+        f'<span class="sdk-card__cta">Start →</span>'
+        f'</a>'
+        for s in HOME_SDK_ORDER
+    ])
+    return f"""<main class="hero hero--dark">
+  <div class="hero__inner hero__inner--center">
+    <span class="eyebrow eyebrow--light">Appice Developers</span>
+    <h1 class="hero__h1 hero__h1--big">Pick your stack. Ship your first decision in 30 minutes.</h1>
+    <p class="hero__sub hero__sub--light">SDKs for the apps your customers use. A REST API for the systems behind them. End-to-end guides that connect signal to decision to action.</p>
+    <div class="hero__pills">
+      {pills}
     </div>
   </div>
 </main>
 
 <section class="grid-section">
   <div class="inner">
-    <h2 class="section-title">SDKs</h2>
-    <p class="section-sub">Capture every customer signal from your mobile, web and React Native surfaces and stream it into the decisioning layer in real time.</p>
-    <div class="card-grid card-grid--4">
-      <a href="sdk/ios/index.html" class="card">
-        <div class="card__icon">📱</div>
-        <h3 class="card__title">iOS</h3>
-        <p class="card__desc">Swift / Objective-C client for iPhone and iPad apps.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
-      <a href="sdk/android/index.html" class="card">
-        <div class="card__icon">🤖</div>
-        <h3 class="card__title">Android</h3>
-        <p class="card__desc">Kotlin / Java client for Android apps.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
-      <a href="sdk/web/index.html" class="card">
-        <div class="card__icon">🌐</div>
-        <h3 class="card__title">Web</h3>
-        <p class="card__desc">JavaScript / TypeScript client for browsers.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
-      <a href="sdk/react-native/index.html" class="card">
-        <div class="card__icon">⚛️</div>
-        <h3 class="card__title">React Native</h3>
-        <p class="card__desc">Cross-platform client with parity to native iOS and Android.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
+    <p class="section-eyebrow">SDK Quickstarts — 10 platforms supported</p>
+    <div class="sdk-grid">
+      {cards}
     </div>
   </div>
 </section>
@@ -448,6 +447,12 @@ def sdk_index_intro(sdk: str) -> str:
         "android": "Lightweight Kotlin and Java client for Android apps. Captures behavioural events, manages user identity, registers for FCM pushes and renders in-app campaigns.",
         "web": "JavaScript and TypeScript client for browsers and progressive web apps. Tracks page views, custom events and user identity; supports web push.",
         "react-native": "Cross-platform React Native client with full behavioural-event parity to the native iOS and Android SDKs. Single API surface, two native runtimes.",
+        "kotlin": "Kotlin Multiplatform module that shares the Appice client across iOS, Android and JVM targets from one codebase. Reuses logic, ships native artifacts.",
+        "flutter": "Dart package for Flutter apps. Wraps the native iOS and Android runtimes and exposes a single Dart API for tracking, identity, push and in-app.",
+        "unity": "C# package for Unity games and apps, distributed via Unity Package Manager. Supports iOS, Android and WebGL build targets.",
+        "cordova": "Cordova / PhoneGap plugin that bridges JavaScript calls to the native Appice runtimes on iOS and Android.",
+        "ibm-mfp": "IBM MobileFirst Platform adapter — purpose-built for banking-grade MFP deployments. Plugs into the existing MFP runtime and delivery channels.",
+        "kony": "Kony / Temenos Quantum module for Indian-bank legacy stacks. FFI bridge into Quantum apps, with per-channel decisioning hooks.",
     }
     return intros[sdk]
 
@@ -458,6 +463,12 @@ def sdk_install_hint(sdk: str) -> str:
         "android": "Recommended via Gradle; minimum Android API level is configured in the SDK's manifest.",
         "web": "Available via npm / yarn for bundled apps; a CDN snippet is also published for static sites.",
         "react-native": "Install via npm or yarn alongside the React Native peer dependency. Native iOS and Android components are linked automatically.",
+        "kotlin": "Distributed as a Kotlin Multiplatform Maven artifact. Add the dependency to your shared module's <code>build.gradle.kts</code>.",
+        "flutter": "Distributed via <code>pub.dev</code>. Add the package to <code>pubspec.yaml</code>; native iOS and Android components link automatically.",
+        "unity": "Distributed via Unity Package Manager (UPM). Import via the package URL in <strong>Window → Package Manager → Add package from git URL</strong>.",
+        "cordova": "Distributed via npm as a Cordova plugin. Install with <code>cordova plugin add</code>.",
+        "ibm-mfp": "Distributed via the IBM MFP CLI. Install through the MFP adapter mechanism on your MFP server.",
+        "kony": "Distributed as a Kony FFI module. Import into your Quantum project via the standard module-add flow.",
     }
     return hints[sdk]
 
@@ -468,8 +479,29 @@ def sdk_init_hint(sdk: str) -> str:
         "android": "Initialize the SDK once in your <code>Application</code> subclass, before any tracking calls.",
         "web": "Initialize the SDK as early as possible — typically in the &lt;head&gt; for synchronous initialization, or after consent is captured for opt-in flows.",
         "react-native": "Initialize the SDK in your root component's <code>useEffect</code> or in <code>index.js</code>, before any tracking calls.",
+        "kotlin": "Initialize the SDK in your shared module's startup function, after platform-specific platform handles are wired up.",
+        "flutter": "Initialize the SDK in <code>main()</code> after <code>WidgetsFlutterBinding.ensureInitialized()</code> and before <code>runApp()</code>.",
+        "unity": "Initialize the SDK in a bootstrap <code>MonoBehaviour</code> with <code>RuntimeInitializeOnLoadMethod</code>, or in your first scene's <code>Awake</code>.",
+        "cordova": "Initialize the SDK in your <code>onDeviceReady</code> handler in <code>www/js/index.js</code>.",
+        "ibm-mfp": "Configure the Appice adapter through the standard MFP adapter flow; no client-side init required for backend-driven decisioning.",
+        "kony": "Initialize the SDK in your Quantum app's <code>preAppInit</code> or first form's <code>preShow</code> event.",
     }
     return hints[sdk]
+
+
+# Per-SDK metadata for the home page card grid.
+SDK_META = {
+    "ios":          {"icon": "📱",  "tag": "iOS · SPM/CocoaPods",       "name": "iOS",            "blurb": "Native iOS SDK. Swift / Objective-C."},
+    "android":      {"icon": "🤖",  "tag": "Java/Kotlin · Gradle",       "name": "Android",        "blurb": "Native Android SDK. Kotlin / Java."},
+    "web":          {"icon": "🌐",  "tag": "JavaScript · npm / CDN",     "name": "Web",            "blurb": "Browser SDK. JS / TS."},
+    "react-native": {"icon": "⚛️",  "tag": "TypeScript · npm",            "name": "React Native",   "blurb": "Wraps native SDKs. RN 0.71+ autolinked."},
+    "kotlin":       {"icon": "🅺",   "tag": "KMP · multiplatform",         "name": "Kotlin",         "blurb": "KMP shared module. Reuse logic across iOS &amp; Android."},
+    "flutter":      {"icon": "🦋",  "tag": "Dart · pub.dev",              "name": "Flutter",        "blurb": "Dart package. iOS &amp; Android via platform channels."},
+    "unity":        {"icon": "🎮",  "tag": "C# · UPM",                    "name": "Unity",          "blurb": "Unity Package Manager. iOS, Android, WebGL."},
+    "cordova":      {"icon": "📦",  "tag": "JavaScript · plugin",         "name": "Cordova",        "blurb": "Cordova / PhoneGap plugin. JS bridge to natives."},
+    "ibm-mfp":      {"icon": "🏦",  "tag": "Adapter · MFP CLI",           "name": "IBM MFP",        "blurb": "IBM MobileFirst Platform adapter. Banking-grade."},
+    "kony":         {"icon": "🛡️",  "tag": "FFI module · Quantum",        "name": "Kony",           "blurb": "Kony / Temenos Quantum module. Indian-bank legacy stack."},
+}
 
 
 # API pages
@@ -807,44 +839,40 @@ def changelog_body() -> str:
 
 
 def sdk_index_root_body() -> str:
+    HOME_SDK_ORDER = ["ios","android","kotlin","flutter","react-native","web","unity","cordova","ibm-mfp","kony"]
+    cards = "\n      ".join([
+        f'<a href="{s}/index.html" class="sdk-card">'
+        f'<div class="sdk-card__icon">{SDK_META[s]["icon"]}</div>'
+        f'<div class="sdk-card__tag">{SDK_META[s]["tag"]}</div>'
+        f'<h3 class="sdk-card__name">{SDK_META[s]["name"]}</h3>'
+        f'<p class="sdk-card__desc">{SDK_META[s]["blurb"]}</p>'
+        f'<span class="sdk-card__cta">Open →</span>'
+        f'</a>'
+        for s in HOME_SDK_ORDER
+    ])
     return f"""<main class="docs-page docs-page--full">
   <article class="docs-body docs-body--wide">
     <span class="docs-eyebrow">SDKs</span>
     <h1>Client SDKs</h1>
-    <p class="docs-lede">Appice ships four client SDKs covering the runtimes that matter for enterprise apps. All four expose the same conceptual API surface; method names differ to match each language's idioms.</p>
+    <p class="docs-lede">Ten production SDKs covering native mobile, cross-platform, web and the enterprise-banking runtimes our regulated customers run today. All expose the same conceptual API surface — method names differ to match each language's idioms.</p>
 
-    <div class="card-grid card-grid--4">
-      <a href="ios/index.html" class="card">
-        <div class="card__icon">📱</div>
-        <h3 class="card__title">iOS</h3>
-        <p class="card__desc">Swift / Objective-C client.</p>
-        <span class="card__cta">Open →</span>
-      </a>
-      <a href="android/index.html" class="card">
-        <div class="card__icon">🤖</div>
-        <h3 class="card__title">Android</h3>
-        <p class="card__desc">Kotlin / Java client.</p>
-        <span class="card__cta">Open →</span>
-      </a>
-      <a href="web/index.html" class="card">
-        <div class="card__icon">🌐</div>
-        <h3 class="card__title">Web</h3>
-        <p class="card__desc">JavaScript / TypeScript.</p>
-        <span class="card__cta">Open →</span>
-      </a>
-      <a href="react-native/index.html" class="card">
-        <div class="card__icon">⚛️</div>
-        <h3 class="card__title">React Native</h3>
-        <p class="card__desc">Cross-platform with native parity.</p>
-        <span class="card__cta">Open →</span>
-      </a>
+    <div class="sdk-grid">
+      {cards}
     </div>
 
-    <h2>Choosing between native and React Native</h2>
-    <p>Use the native iOS or Android SDKs if you have a single-platform app or need maximum performance. Use the React Native SDK if you have a cross-platform JavaScript codebase — it has full event-capture parity with the native SDKs as of the latest release.</p>
+    <h2>Choosing the right SDK</h2>
+    <ul>
+      <li><strong>Native iOS / Android</strong> — single-platform apps or maximum performance.</li>
+      <li><strong>Kotlin Multiplatform</strong> — sharing client logic across iOS &amp; Android from one Kotlin codebase.</li>
+      <li><strong>Flutter / React Native</strong> — cross-platform Dart or JS codebases. Both have native-parity event capture.</li>
+      <li><strong>Web</strong> — browser surfaces (marketing sites, web apps, PWAs). Don't embed inside a native WebView; use a native SDK there.</li>
+      <li><strong>Unity</strong> — games and 3D apps. Supports iOS, Android and WebGL build targets.</li>
+      <li><strong>Cordova</strong> — legacy hybrid apps that already use the Cordova plugin model.</li>
+      <li><strong>IBM MFP / Kony</strong> — banking-grade platforms. Use these only if your stack is already on MobileFirst Platform or Kony / Temenos Quantum.</li>
+    </ul>
 
-    <h2>Choosing between Web and a native SDK</h2>
-    <p>Web SDK is for browser surfaces — marketing sites, web apps, progressive web apps. Use a native SDK for installed mobile apps; do not embed the Web SDK in a WebView wrapper around a native app (use the native SDK instead).</p>
+    <h2>Compatibility and version matrix</h2>
+    {todo("Single combined matrix: SDK / latest version / minimum runtime version / supported targets / notes. Engineering owns this — keep it on this page so docs readers can compare without clicking through ten SDK pages.")}
   </article>
 </main>"""
 
@@ -867,15 +895,21 @@ PAGES.append(("changelog.html",
 
 PAGES.append(("sdk/index.html",
               "SDKs — Appice Developers",
-              "Appice client SDKs: iOS, Android, Web and React Native.",
+              "Ten production SDKs across mobile, cross-platform, web and enterprise banking runtimes.",
               sdk_index_root_body, "../"))
 
-# Per-SDK pages
+# Per-SDK pages — order matches the home-page card grid below.
 SDK_LIST = [
-    ("ios", "iOS"),
-    ("android", "Android"),
-    ("web", "Web"),
+    ("ios",          "iOS"),
+    ("android",      "Android"),
+    ("kotlin",       "Kotlin"),
+    ("flutter",      "Flutter"),
     ("react-native", "React Native"),
+    ("web",          "Web"),
+    ("unity",        "Unity"),
+    ("cordova",      "Cordova"),
+    ("ibm-mfp",      "IBM MFP"),
+    ("kony",         "Kony"),
 ]
 for slug, name in SDK_LIST:
     PAGES.append((f"sdk/{slug}/index.html",

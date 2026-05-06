@@ -5,18 +5,18 @@
   <link rel="icon" type="image/png" href="../img/appice-logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SDKs — Appice Developers</title>
-  <meta name="description" content="Appice client SDKs: iOS, Android, Web and React Native.">
+  <meta name="description" content="Ten production SDKs across mobile, cross-platform, web and enterprise banking runtimes.">
   <link rel="canonical" href="https://dev.appice.ai/sdk/">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Appice Developers">
   <meta property="og:url" content="https://dev.appice.ai/sdk/">
   <meta property="og:title" content="SDKs — Appice Developers">
-  <meta property="og:description" content="Appice client SDKs: iOS, Android, Web and React Native.">
+  <meta property="og:description" content="Ten production SDKs across mobile, cross-platform, web and enterprise banking runtimes.">
   <meta property="og:image" content="https://dev.appice.ai/img/og-card.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="SDKs — Appice Developers">
-  <meta name="twitter:description" content="Appice client SDKs: iOS, Android, Web and React Native.">
+  <meta name="twitter:description" content="Ten production SDKs across mobile, cross-platform, web and enterprise banking runtimes.">
   <meta name="twitter:image" content="https://dev.appice.ai/img/og-card.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Appice","url":"https://appice.ai","logo":"https://appice.ai/img/220426_appice_logo.png","sameAs":["https://www.linkedin.com/company/appiceio","https://x.com/appiceio","https://www.youtube.com/@appiceio"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Appice Developers","url":"https://dev.appice.ai/"}</script>
@@ -49,8 +49,14 @@
   <a href="../sdk/index.html">SDKs</a>
   <a href="../sdk/ios/index.html">— iOS</a>
   <a href="../sdk/android/index.html">— Android</a>
-  <a href="../sdk/web/index.html">— Web</a>
+  <a href="../sdk/kotlin/index.html">— Kotlin</a>
+  <a href="../sdk/flutter/index.html">— Flutter</a>
   <a href="../sdk/react-native/index.html">— React Native</a>
+  <a href="../sdk/web/index.html">— Web</a>
+  <a href="../sdk/unity/index.html">— Unity</a>
+  <a href="../sdk/cordova/index.html">— Cordova</a>
+  <a href="../sdk/ibm-mfp/index.html">— IBM MFP</a>
+  <a href="../sdk/kony/index.html">— Kony</a>
   <a href="../api/index.html">API Reference</a>
   <a href="../guides/index.html">Guides</a>
   <a href="../changelog.html">Changelog</a>
@@ -71,40 +77,37 @@
   <article class="docs-body docs-body--wide">
     <span class="docs-eyebrow">SDKs</span>
     <h1>Client SDKs</h1>
-    <p class="docs-lede">Appice ships four client SDKs covering the runtimes that matter for enterprise apps. All four expose the same conceptual API surface; method names differ to match each language's idioms.</p>
+    <p class="docs-lede">Ten production SDKs covering native mobile, cross-platform, web and the enterprise-banking runtimes our regulated customers run today. All expose the same conceptual API surface — method names differ to match each language's idioms.</p>
 
-    <div class="card-grid card-grid--4">
-      <a href="ios/index.html" class="card">
-        <div class="card__icon">📱</div>
-        <h3 class="card__title">iOS</h3>
-        <p class="card__desc">Swift / Objective-C client.</p>
-        <span class="card__cta">Open →</span>
-      </a>
-      <a href="android/index.html" class="card">
-        <div class="card__icon">🤖</div>
-        <h3 class="card__title">Android</h3>
-        <p class="card__desc">Kotlin / Java client.</p>
-        <span class="card__cta">Open →</span>
-      </a>
-      <a href="web/index.html" class="card">
-        <div class="card__icon">🌐</div>
-        <h3 class="card__title">Web</h3>
-        <p class="card__desc">JavaScript / TypeScript.</p>
-        <span class="card__cta">Open →</span>
-      </a>
-      <a href="react-native/index.html" class="card">
-        <div class="card__icon">⚛️</div>
-        <h3 class="card__title">React Native</h3>
-        <p class="card__desc">Cross-platform with native parity.</p>
-        <span class="card__cta">Open →</span>
-      </a>
+    <div class="sdk-grid">
+      <a href="ios/index.html" class="sdk-card"><div class="sdk-card__icon">📱</div><div class="sdk-card__tag">iOS · SPM/CocoaPods</div><h3 class="sdk-card__name">iOS</h3><p class="sdk-card__desc">Native iOS SDK. Swift / Objective-C.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="android/index.html" class="sdk-card"><div class="sdk-card__icon">🤖</div><div class="sdk-card__tag">Java/Kotlin · Gradle</div><h3 class="sdk-card__name">Android</h3><p class="sdk-card__desc">Native Android SDK. Kotlin / Java.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="kotlin/index.html" class="sdk-card"><div class="sdk-card__icon">🅺</div><div class="sdk-card__tag">KMP · multiplatform</div><h3 class="sdk-card__name">Kotlin</h3><p class="sdk-card__desc">KMP shared module. Reuse logic across iOS &amp; Android.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="flutter/index.html" class="sdk-card"><div class="sdk-card__icon">🦋</div><div class="sdk-card__tag">Dart · pub.dev</div><h3 class="sdk-card__name">Flutter</h3><p class="sdk-card__desc">Dart package. iOS &amp; Android via platform channels.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="react-native/index.html" class="sdk-card"><div class="sdk-card__icon">⚛️</div><div class="sdk-card__tag">TypeScript · npm</div><h3 class="sdk-card__name">React Native</h3><p class="sdk-card__desc">Wraps native SDKs. RN 0.71+ autolinked.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="web/index.html" class="sdk-card"><div class="sdk-card__icon">🌐</div><div class="sdk-card__tag">JavaScript · npm / CDN</div><h3 class="sdk-card__name">Web</h3><p class="sdk-card__desc">Browser SDK. JS / TS.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="unity/index.html" class="sdk-card"><div class="sdk-card__icon">🎮</div><div class="sdk-card__tag">C# · UPM</div><h3 class="sdk-card__name">Unity</h3><p class="sdk-card__desc">Unity Package Manager. iOS, Android, WebGL.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="cordova/index.html" class="sdk-card"><div class="sdk-card__icon">📦</div><div class="sdk-card__tag">JavaScript · plugin</div><h3 class="sdk-card__name">Cordova</h3><p class="sdk-card__desc">Cordova / PhoneGap plugin. JS bridge to natives.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="ibm-mfp/index.html" class="sdk-card"><div class="sdk-card__icon">🏦</div><div class="sdk-card__tag">Adapter · MFP CLI</div><h3 class="sdk-card__name">IBM MFP</h3><p class="sdk-card__desc">IBM MobileFirst Platform adapter. Banking-grade.</p><span class="sdk-card__cta">Open →</span></a>
+      <a href="kony/index.html" class="sdk-card"><div class="sdk-card__icon">🛡️</div><div class="sdk-card__tag">FFI module · Quantum</div><h3 class="sdk-card__name">Kony</h3><p class="sdk-card__desc">Kony / Temenos Quantum module. Indian-bank legacy stack.</p><span class="sdk-card__cta">Open →</span></a>
     </div>
 
-    <h2>Choosing between native and React Native</h2>
-    <p>Use the native iOS or Android SDKs if you have a single-platform app or need maximum performance. Use the React Native SDK if you have a cross-platform JavaScript codebase — it has full event-capture parity with the native SDKs as of the latest release.</p>
+    <h2>Choosing the right SDK</h2>
+    <ul>
+      <li><strong>Native iOS / Android</strong> — single-platform apps or maximum performance.</li>
+      <li><strong>Kotlin Multiplatform</strong> — sharing client logic across iOS &amp; Android from one Kotlin codebase.</li>
+      <li><strong>Flutter / React Native</strong> — cross-platform Dart or JS codebases. Both have native-parity event capture.</li>
+      <li><strong>Web</strong> — browser surfaces (marketing sites, web apps, PWAs). Don't embed inside a native WebView; use a native SDK there.</li>
+      <li><strong>Unity</strong> — games and 3D apps. Supports iOS, Android and WebGL build targets.</li>
+      <li><strong>Cordova</strong> — legacy hybrid apps that already use the Cordova plugin model.</li>
+      <li><strong>IBM MFP / Kony</strong> — banking-grade platforms. Use these only if your stack is already on MobileFirst Platform or Kony / Temenos Quantum.</li>
+    </ul>
 
-    <h2>Choosing between Web and a native SDK</h2>
-    <p>Web SDK is for browser surfaces — marketing sites, web apps, progressive web apps. Use a native SDK for installed mobile apps; do not embed the Web SDK in a WebView wrapper around a native app (use the native SDK instead).</p>
+    <h2>Compatibility and version matrix</h2>
+    <div class="todo">
+  <div class="todo__label">⚠ TODO — Engineering</div>
+  <div class="todo__text">Single combined matrix: SDK / latest version / minimum runtime version / supported targets / notes. Engineering owns this — keep it on this page so docs readers can compare without clicking through ten SDK pages.</div>
+</div>
   </article>
 </main>
 <footer class="footer">
@@ -118,8 +121,14 @@
       <h4>SDKs</h4>
       <a href="../sdk/ios/index.html">iOS</a>
       <a href="../sdk/android/index.html">Android</a>
-      <a href="../sdk/web/index.html">Web</a>
+      <a href="../sdk/kotlin/index.html">Kotlin</a>
+      <a href="../sdk/flutter/index.html">Flutter</a>
       <a href="../sdk/react-native/index.html">React Native</a>
+      <a href="../sdk/web/index.html">Web</a>
+      <a href="../sdk/unity/index.html">Unity</a>
+      <a href="../sdk/cordova/index.html">Cordova</a>
+      <a href="../sdk/ibm-mfp/index.html">IBM MFP</a>
+      <a href="../sdk/kony/index.html">Kony</a>
     </div>
     <div class="footer__col">
       <h4>API</h4>

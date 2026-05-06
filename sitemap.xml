@@ -27,6 +27,30 @@
   <url><loc>https://dev.appice.ai/sdk/react-native/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://dev.appice.ai/sdk/react-native/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://dev.appice.ai/sdk/react-native/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kotlin/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kotlin/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kotlin/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kotlin/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/flutter/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/flutter/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/flutter/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/flutter/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/unity/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/unity/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/unity/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/unity/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/cordova/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/cordova/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/cordova/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/cordova/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/ibm-mfp/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/ibm-mfp/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/ibm-mfp/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/ibm-mfp/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kony/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kony/quickstart.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kony/reference.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://dev.appice.ai/sdk/kony/changelog.html</loc><priority>0.7</priority><changefreq>weekly</changefreq></url>
 
   <!-- API -->
   <url><loc>https://dev.appice.ai/api/index.html</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>

@@ -49,8 +49,14 @@
   <a href="sdk/index.html">SDKs</a>
   <a href="sdk/ios/index.html">— iOS</a>
   <a href="sdk/android/index.html">— Android</a>
-  <a href="sdk/web/index.html">— Web</a>
+  <a href="sdk/kotlin/index.html">— Kotlin</a>
+  <a href="sdk/flutter/index.html">— Flutter</a>
   <a href="sdk/react-native/index.html">— React Native</a>
+  <a href="sdk/web/index.html">— Web</a>
+  <a href="sdk/unity/index.html">— Unity</a>
+  <a href="sdk/cordova/index.html">— Cordova</a>
+  <a href="sdk/ibm-mfp/index.html">— IBM MFP</a>
+  <a href="sdk/kony/index.html">— Kony</a>
   <a href="api/index.html">API Reference</a>
   <a href="guides/index.html">Guides</a>
   <a href="changelog.html">Changelog</a>
@@ -67,47 +73,40 @@
     <div class="search-results"></div>
   </div>
 </div>
-<main class="hero hero--landing">
-  <div class="hero__inner">
-    <span class="eyebrow">Developer Portal</span>
-    <h1 class="hero__h1">Build with Appice.</h1>
-    <p class="hero__sub">Real-time decisioning and execution APIs, SDKs and reference implementations for the four runtimes Appice ships today.</p>
-    <div class="hero__ctas">
-      <a href="guides/getting-started.html" class="btn btn--blue">Getting started</a>
-      <a href="api/index.html" class="btn btn--outline">API reference</a>
+<main class="hero hero--dark">
+  <div class="hero__inner hero__inner--center">
+    <span class="eyebrow eyebrow--light">Appice Developers</span>
+    <h1 class="hero__h1 hero__h1--big">Pick your stack. Ship your first decision in 30 minutes.</h1>
+    <p class="hero__sub hero__sub--light">SDKs for the apps your customers use. A REST API for the systems behind them. End-to-end guides that connect signal to decision to action.</p>
+    <div class="hero__pills">
+      <a href="sdk/ios/quickstart.html" class="hero__pill">iOS</a>
+      <a href="sdk/android/quickstart.html" class="hero__pill">Android</a>
+      <a href="sdk/kotlin/quickstart.html" class="hero__pill">Kotlin</a>
+      <a href="sdk/flutter/quickstart.html" class="hero__pill">Flutter</a>
+      <a href="sdk/react-native/quickstart.html" class="hero__pill">React Native</a>
+      <a href="sdk/web/quickstart.html" class="hero__pill">Web</a>
+      <a href="sdk/unity/quickstart.html" class="hero__pill">Unity</a>
+      <a href="sdk/cordova/quickstart.html" class="hero__pill">Cordova</a>
+      <a href="sdk/ibm-mfp/quickstart.html" class="hero__pill">IBM MFP</a>
+      <a href="sdk/kony/quickstart.html" class="hero__pill">Kony</a>
     </div>
   </div>
 </main>
 
 <section class="grid-section">
   <div class="inner">
-    <h2 class="section-title">SDKs</h2>
-    <p class="section-sub">Capture every customer signal from your mobile, web and React Native surfaces and stream it into the decisioning layer in real time.</p>
-    <div class="card-grid card-grid--4">
-      <a href="sdk/ios/index.html" class="card">
-        <div class="card__icon">📱</div>
-        <h3 class="card__title">iOS</h3>
-        <p class="card__desc">Swift / Objective-C client for iPhone and iPad apps.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
-      <a href="sdk/android/index.html" class="card">
-        <div class="card__icon">🤖</div>
-        <h3 class="card__title">Android</h3>
-        <p class="card__desc">Kotlin / Java client for Android apps.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
-      <a href="sdk/web/index.html" class="card">
-        <div class="card__icon">🌐</div>
-        <h3 class="card__title">Web</h3>
-        <p class="card__desc">JavaScript / TypeScript client for browsers.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
-      <a href="sdk/react-native/index.html" class="card">
-        <div class="card__icon">⚛️</div>
-        <h3 class="card__title">React Native</h3>
-        <p class="card__desc">Cross-platform client with parity to native iOS and Android.</p>
-        <span class="card__cta">Get started →</span>
-      </a>
+    <p class="section-eyebrow">SDK Quickstarts — 10 platforms supported</p>
+    <div class="sdk-grid">
+      <a href="sdk/ios/quickstart.html" class="sdk-card"><div class="sdk-card__icon">📱</div><div class="sdk-card__tag">iOS · SPM/CocoaPods</div><h3 class="sdk-card__name">iOS</h3><p class="sdk-card__desc">Native iOS SDK. Swift / Objective-C.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/android/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🤖</div><div class="sdk-card__tag">Java/Kotlin · Gradle</div><h3 class="sdk-card__name">Android</h3><p class="sdk-card__desc">Native Android SDK. Kotlin / Java.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/kotlin/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🅺</div><div class="sdk-card__tag">KMP · multiplatform</div><h3 class="sdk-card__name">Kotlin</h3><p class="sdk-card__desc">KMP shared module. Reuse logic across iOS &amp; Android.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/flutter/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🦋</div><div class="sdk-card__tag">Dart · pub.dev</div><h3 class="sdk-card__name">Flutter</h3><p class="sdk-card__desc">Dart package. iOS &amp; Android via platform channels.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/react-native/quickstart.html" class="sdk-card"><div class="sdk-card__icon">⚛️</div><div class="sdk-card__tag">TypeScript · npm</div><h3 class="sdk-card__name">React Native</h3><p class="sdk-card__desc">Wraps native SDKs. RN 0.71+ autolinked.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/web/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🌐</div><div class="sdk-card__tag">JavaScript · npm / CDN</div><h3 class="sdk-card__name">Web</h3><p class="sdk-card__desc">Browser SDK. JS / TS.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/unity/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🎮</div><div class="sdk-card__tag">C# · UPM</div><h3 class="sdk-card__name">Unity</h3><p class="sdk-card__desc">Unity Package Manager. iOS, Android, WebGL.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/cordova/quickstart.html" class="sdk-card"><div class="sdk-card__icon">📦</div><div class="sdk-card__tag">JavaScript · plugin</div><h3 class="sdk-card__name">Cordova</h3><p class="sdk-card__desc">Cordova / PhoneGap plugin. JS bridge to natives.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/ibm-mfp/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🏦</div><div class="sdk-card__tag">Adapter · MFP CLI</div><h3 class="sdk-card__name">IBM MFP</h3><p class="sdk-card__desc">IBM MobileFirst Platform adapter. Banking-grade.</p><span class="sdk-card__cta">Start →</span></a>
+      <a href="sdk/kony/quickstart.html" class="sdk-card"><div class="sdk-card__icon">🛡️</div><div class="sdk-card__tag">FFI module · Quantum</div><h3 class="sdk-card__name">Kony</h3><p class="sdk-card__desc">Kony / Temenos Quantum module. Indian-bank legacy stack.</p><span class="sdk-card__cta">Start →</span></a>
     </div>
   </div>
 </section>
@@ -115,29 +114,21 @@
 <section class="grid-section grid-section--alt">
   <div class="inner">
     <h2 class="section-title">REST API</h2>
-    <p class="section-sub">Send events, identify users and receive webhooks server-side. Browse the full spec, grab the Postman collection, or jump straight to a topic.</p>
-    <div class="card-grid card-grid--4">
-      <a href="api/reference.html" class="card">
-        <h3 class="card__title">Full reference</h3>
-        <p class="card__desc">Every endpoint, request and response. OpenAPI spec rendered with Redoc.</p>
-        <span class="card__cta">Browse →</span>
-      </a>
+    <p class="section-sub">Send events, identify users and receive webhooks server-side. Pair with the SDKs or use standalone for backend integrations.</p>
+    <div class="card-grid card-grid--3">
       <a href="api/authentication.html" class="card">
         <h3 class="card__title">Authentication</h3>
-        <p class="card__desc">Bearer + workspace headers. Where to get keys.</p>
+        <p class="card__desc">How to authenticate API requests.</p>
       </a>
-      <a href="api/rate-limits.html" class="card">
-        <h3 class="card__title">Rate limits</h3>
-        <p class="card__desc">Per-workspace limits and the 429 response.</p>
+      <a href="api/events.html" class="card">
+        <h3 class="card__title">Events</h3>
+        <p class="card__desc">Send behavioural events server-side.</p>
       </a>
       <a href="api/webhooks.html" class="card">
         <h3 class="card__title">Webhooks</h3>
         <p class="card__desc">Receive real-time decisions and outcomes.</p>
       </a>
     </div>
-    <p style="margin-top:18px;font-size:13px;color:rgba(5,13,31,.55)">
-      Need a sandbox? <a href="sandbox-access.html">Request sandbox access</a> · No keys yet? See <a href="api/authentication.html#get-keys">how to issue them</a>.
-    </p>
   </div>
 </section>
 
@@ -168,8 +159,14 @@
       <h4>SDKs</h4>
       <a href="sdk/ios/index.html">iOS</a>
       <a href="sdk/android/index.html">Android</a>
-      <a href="sdk/web/index.html">Web</a>
+      <a href="sdk/kotlin/index.html">Kotlin</a>
+      <a href="sdk/flutter/index.html">Flutter</a>
       <a href="sdk/react-native/index.html">React Native</a>
+      <a href="sdk/web/index.html">Web</a>
+      <a href="sdk/unity/index.html">Unity</a>
+      <a href="sdk/cordova/index.html">Cordova</a>
+      <a href="sdk/ibm-mfp/index.html">IBM MFP</a>
+      <a href="sdk/kony/index.html">Kony</a>
     </div>
     <div class="footer__col">
       <h4>API</h4>

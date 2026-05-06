@@ -4,23 +4,23 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/png" href="../../img/appice-logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>iOS SDK — Appice Developers</title>
-  <meta name="description" content="Appice iOS SDK overview, compatibility and quick links.">
-  <link rel="canonical" href="https://dev.appice.ai/sdk/ios/">
+  <title>Unity SDK Quickstart — Appice Developers</title>
+  <meta name="description" content="Install, initialize and send your first event with the Appice Unity SDK.">
+  <link rel="canonical" href="https://dev.appice.ai/sdk/unity/quickstart.html">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Appice Developers">
-  <meta property="og:url" content="https://dev.appice.ai/sdk/ios/">
-  <meta property="og:title" content="iOS SDK — Appice Developers">
-  <meta property="og:description" content="Appice iOS SDK overview, compatibility and quick links.">
+  <meta property="og:url" content="https://dev.appice.ai/sdk/unity/quickstart.html">
+  <meta property="og:title" content="Unity SDK Quickstart — Appice Developers">
+  <meta property="og:description" content="Install, initialize and send your first event with the Appice Unity SDK.">
   <meta property="og:image" content="https://dev.appice.ai/img/og-card.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="iOS SDK — Appice Developers">
-  <meta name="twitter:description" content="Appice iOS SDK overview, compatibility and quick links.">
+  <meta name="twitter:title" content="Unity SDK Quickstart — Appice Developers">
+  <meta name="twitter:description" content="Install, initialize and send your first event with the Appice Unity SDK.">
   <meta name="twitter:image" content="https://dev.appice.ai/img/og-card.jpg">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Appice","url":"https://appice.ai","logo":"https://appice.ai/img/220426_appice_logo.png","sameAs":["https://www.linkedin.com/company/appiceio","https://x.com/appiceio","https://www.youtube.com/@appiceio"]}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Appice Developers","url":"https://dev.appice.ai/"}</script>
-  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Developers", "item": "https://dev.appice.ai/"}, {"@type": "ListItem", "position": 2, "name": "SDKs", "item": "https://dev.appice.ai/sdk"}, {"@type": "ListItem", "position": 3, "name": "iOS", "item": "https://dev.appice.ai/sdk/ios"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Developers", "item": "https://dev.appice.ai/"}, {"@type": "ListItem", "position": 2, "name": "SDKs", "item": "https://dev.appice.ai/sdk"}, {"@type": "ListItem", "position": 3, "name": "Unity", "item": "https://dev.appice.ai/sdk/unity"}, {"@type": "ListItem", "position": 4, "name": "Quickstart", "item": "https://dev.appice.ai/sdk/unity/quickstart.html"}]}</script>
   <link rel="stylesheet" href="../../css/docs.css?v=1">
   <link rel="stylesheet" href="../../css/prism.css?v=1">
 </head>
@@ -76,64 +76,56 @@
 <main class="docs-page">
   <aside class="docs-sidebar">
     <div class="docs-sidebar__group">
-      <div class="docs-sidebar__head">iOS</div>
-      <a href="index.html" class="is-active">Overview</a>
-      <a href="quickstart.html">Quickstart</a>
+      <div class="docs-sidebar__head">Unity</div>
+      <a href="index.html">Overview</a>
+      <a href="quickstart.html" class="is-active">Quickstart</a>
       <a href="reference.html">API reference</a>
       <a href="changelog.html">Changelog</a>
     </div>
-    <div class="docs-sidebar__group">
-      <div class="docs-sidebar__head">Other SDKs</div>
-      <a href="../ios/index.html">iOS</a>
-      <a href="../android/index.html">Android</a>
-      <a href="../web/index.html">Web</a>
-      <a href="../react-native/index.html">React Native</a>
-    </div>
   </aside>
   <article class="docs-body">
-    <span class="docs-eyebrow">SDK</span>
-    <h1>iOS SDK</h1>
-    <p class="docs-lede">Lightweight Swift and Objective-C client for iOS apps. Captures behavioural events, manages user identity, registers for pushes and renders in-app campaigns.</p>
+    <span class="docs-eyebrow">Unity SDK</span>
+    <h1>Quickstart</h1>
+    <p class="docs-lede">Install the Unity SDK, initialize it once at app start, and send your first event.</p>
 
-    <div class="version-row">
-      <span class="version-badge">Latest</span>
-      <div class="todo">
-  <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Replace with the latest published version of the iOS SDK (e.g. <code>v1.4.2</code>) and link to release notes.</div>
-</div>
-    </div>
-
-    <h2>Quick links</h2>
-    <div class="card-grid card-grid--3">
-      <a href="quickstart.html" class="card">
-        <h3 class="card__title">Quickstart</h3>
-        <p class="card__desc">Install, initialize and send your first event in under 10 minutes.</p>
-      </a>
-      <a href="reference.html" class="card">
-        <h3 class="card__title">API reference</h3>
-        <p class="card__desc">Every public method, parameter and return type.</p>
-      </a>
-      <a href="changelog.html" class="card">
-        <h3 class="card__title">Changelog</h3>
-        <p class="card__desc">Releases, breaking changes and migration notes.</p>
-      </a>
-    </div>
-
-    <h2>Compatibility</h2>
+    <h2>1. Install</h2>
+    <p>Distributed via Unity Package Manager (UPM). Import via the package URL in <strong>Window → Package Manager → Add package from git URL</strong>.</p>
     <div class="todo">
   <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Fill the minimum supported iOS runtime version (and any deprecated versions) here. Use a small table: Runtime / Min version / Notes.</div>
+  <div class="todo__text">Paste the install command(s) for the Unity SDK. Include the package manager (CocoaPods, SPM, Gradle, npm, yarn, etc.) and the latest version pin.</div>
 </div>
 
-    <h2>Privacy &amp; consent</h2>
-    <p>Appice is built for regulated, data-sensitive environments. The iOS SDK respects user-level consent flags and supports deferred initialization until consent is captured.</p>
-    <p>See <a href="../../guides/concepts.html#privacy">privacy &amp; consent in concepts</a> for the model used across all SDKs.</p>
-
-    <h2>Source &amp; releases</h2>
+    <h2>2. Initialize</h2>
+    <p>Initialize the SDK in a bootstrap <code>MonoBehaviour</code> with <code>RuntimeInitializeOnLoadMethod</code>, or in your first scene's <code>Awake</code>.</p>
     <div class="todo">
   <div class="todo__label">⚠ TODO — Engineering</div>
-  <div class="todo__text">Link to the GitHub repository (or registry listing) for the iOS SDK and the canonical release-notes URL.</div>
+  <div class="todo__text">Paste the initialization snippet. Include the API key parameter name, region/endpoint parameter, and any required runtime callbacks. If the SDK supports multiple languages on this runtime (Swift+Obj-C, Kotlin+Java, JS+TS), wrap each in a <code>&lt;div class='tab'&gt;</code> — the tab switcher in <code>js/docs.js</code> handles the rest.</div>
 </div>
+
+    <h2>3. Identify a user</h2>
+    <div class="todo">
+  <div class="todo__label">⚠ TODO — Engineering</div>
+  <div class="todo__text">Paste a user-identify snippet showing how to attach a user identifier and basic user properties (email, plan, locale). Note any privacy considerations (PII handling, hashed IDs).</div>
+</div>
+
+    <h2>4. Send your first event</h2>
+    <div class="todo">
+  <div class="todo__label">⚠ TODO — Engineering</div>
+  <div class="todo__text">Paste an event-tracking snippet. Use a realistic example event (e.g. <code>app_opened</code> or <code>checkout_started</code>) with 1-2 properties.</div>
+</div>
+
+    <h2>5. Verify</h2>
+    <div class="todo">
+  <div class="todo__label">⚠ TODO — Engineering</div>
+  <div class="todo__text">Tell the developer how to verify the Unity SDK is connected — link to the live-events view in the panel, mention the typical 1-2 second latency, and what 'success' looks like.</div>
+</div>
+
+    <h2>Next steps</h2>
+    <ul>
+      <li><a href="reference.html">Full API reference</a> — every public method.</li>
+      <li><a href="../../api/events.html">Server-side events</a> — for backend integrations.</li>
+      <li><a href="../../guides/concepts.html">Concepts</a> — Sense / Decide / Act / Learn.</li>
+    </ul>
   </article>
 </main>
 <footer class="footer">
